@@ -5,7 +5,6 @@ import java.io.DataOutput;
 import java.io.DataOutputStream;
 import java.io.OutputStream;
 
-import net.io.Request;
 import net.io.Response;
 
 class UWapResponse implements Response {
@@ -23,12 +22,6 @@ class UWapResponse implements Response {
 	protected int sessionId;
 	
 	protected UWapError error;
-	
-	protected final Request request;
-	
-	protected UWapResponse(Request request) {
-		this.request = request;
-	}
 
 	@Override
 	public void mergeFrom(byte[] data) throws Exception {
@@ -49,18 +42,20 @@ class UWapResponse implements Response {
 		this.sendMessageId = sendMessageId;
 	}
 
-	protected void build() throws Exception {
+	private void build() throws Exception {
+		ByteArrayOutputStream stream = new ByteArrayOutputStream();
+		DataOutput output = new DataOutputStream(stream);
 		if (hasError()) {
-			ByteArrayOutputStream stream = new ByteArrayOutputStream();
-			DataOutput output = new DataOutputStream(stream);
 			output.writeInt(error.errorCode);
 			output.writeUTF(error.errorMsg);
-			setSendDatas(stream.toByteArray());
-			stream.close();
 		} else {
-			setSendDatas(NULL_SEND_DATAS);
+			buildDatas(output);
 		}
+		setSendDatas(stream.toByteArray());
+		stream.close();
 	}
+	
+	protected void buildDatas(DataOutput output) {}
 
 	@Override
 	public int getStatus() {

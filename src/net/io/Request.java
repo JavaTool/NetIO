@@ -2,11 +2,9 @@ package net.io;
 
 public interface Request {
 	
-	byte[] NULL_REQUEST = new byte[0];
-	
 	String getIp();
 	
-	String getReceiveMessageId();
+	int getReceiveMessageId();
 	
 	byte[] getByteArray();
 
