@@ -1,4 +1,4 @@
-package net.io.uwap;
+package net.io.proto;
 
 import java.io.InputStream;
 
@@ -6,21 +6,21 @@ import net.io.IOFactory;
 import net.io.Request;
 import net.io.Response;
 
-public class UWapIOFactory implements IOFactory {
+public class ProtoIOFactory implements IOFactory {
 
 	@Override
 	public Request createRequest(String ip, int receiveMessageId, byte[] datas) {
-		return new UWapRequest(ip, receiveMessageId, datas);
+		return new ProtoRequest(ip, receiveMessageId, datas);
 	}
 
 	@Override
 	public Request createRequest(String ip, int receiveMessageId, InputStream is, int contentLength) throws Exception {
-		return new UWapRequest(ip, receiveMessageId, is, contentLength);
+		return new ProtoRequest(ip, receiveMessageId, is, contentLength);
 	}
 
 	@Override
 	public Response createResponse() {
-		return new UWapResponse();
+		return new ProtoResponse();
 	}
 
 }

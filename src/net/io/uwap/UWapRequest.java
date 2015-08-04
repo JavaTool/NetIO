@@ -27,7 +27,7 @@ public class UWapRequest implements Request {
 		read(createStream());
 	}
 	
-	protected UWapRequest(String ip, int receiveMessageId, InputStream is) throws Exception {
+	protected UWapRequest(String ip, int receiveMessageId, InputStream is, int contentLength) throws Exception {
 		this.ip = ip;
 		DataInput input = new DataInputStream(is);
 		try {
