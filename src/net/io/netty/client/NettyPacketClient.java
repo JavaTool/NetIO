@@ -10,28 +10,19 @@ import java.io.DataOutputStream;
 import net.io.MessageHandle;
 import net.io.netty.Packet;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 public class NettyPacketClient extends NettyClient {
-	
-	protected static final Logger log = LoggerFactory.getLogger(NettyPacketClient.class);
 	
 	public NettyPacketClient(final MessageHandle messageHandle, int port, String host) throws Exception {
 		super(new NettyClientCallback() {
 
 			@Override
-			public void callback(byte[] data, String ip, Channel channel) {
-				try {
-					DataInputStream dis = new DataInputStream(new ByteArrayInputStream(data));
-					int messageId = dis.readInt();
-					int messageLength = dis.readInt();
-					byte[] value = new byte[messageLength];
-					dis.read(value);
-					messageHandle.handle(data, ip, messageId, null, channel);
-				} catch (Exception e) {
-					log.error("", e);
-				}
+			public void callback(byte[] data, String ip, Channel channel) throws Exception {
+				DataInputStream dis = new DataInputStream(new ByteArrayInputStream(data));
+				int messageId = dis.readInt();
+				int messageLength = dis.readInt();
+				byte[] value = new byte[messageLength];
+				dis.read(value);
+				messageHandle.handle(data, ip, messageId, null, channel);
 			}
 			
 		}, port, host);
