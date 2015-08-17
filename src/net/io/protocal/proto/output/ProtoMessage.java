@@ -1,4 +1,4 @@
-package net.io.proto.output;
+package net.io.protocal.proto.output;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -1,11 +1,11 @@
-package net.io.proto;
+package net.io.protocal.proto;
 
 import java.io.BufferedInputStream;
 import java.io.InputStream;
 
 import net.io.Request;
 
-class ProtoRequest implements Request {
+final class ProtoRequest implements Request {
 	
 	/**最大数据读取次数*/
 	protected static final int CONTENT_MAX_READ_TIMES = 5;

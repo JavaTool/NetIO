@@ -1,4 +1,4 @@
-package net.io.uwap;
+package net.io.protocal.uwap;
 
 import java.io.InputStream;
 

@@ -1,4 +1,4 @@
-package net.io.uwap;
+package net.io.protocal.uwap;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutput;
@@ -7,7 +7,7 @@ import java.io.OutputStream;
 
 import net.io.Response;
 
-class UWapResponse implements Response {
+final class UWapResponse implements Response {
 	
 	protected static final byte[] HEAD = {'U', 'A'};
 	

@@ -1,4 +1,4 @@
-package net.io.uwap;
+package net.io.protocal.uwap;
 
 import java.io.ByteArrayInputStream;
 import java.io.DataInput;
@@ -7,7 +7,7 @@ import java.io.InputStream;
 
 import net.io.Request;
 
-public class UWapRequest implements Request {
+final class UWapRequest implements Request {
 	
 	protected static final byte[] HEAD = {'U', 'A'};
 	

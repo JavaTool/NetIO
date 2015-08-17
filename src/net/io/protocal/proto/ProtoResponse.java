@@ -1,10 +1,10 @@
-package net.io.proto;
+package net.io.protocal.proto;
 
 import java.io.OutputStream;
 
 import net.io.Response;
 
-public class ProtoResponse implements Response {
+public abstract class ProtoResponse implements Response {
 	
 	protected int sendMessageId;
 	
@@ -15,21 +15,8 @@ public class ProtoResponse implements Response {
 	protected int sessionId;
 
 	@Override
-	public void setError(int errorCode, String errorMsg) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public boolean hasError() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
 	public void mergeFrom(byte[] data) throws Exception {
-		// TODO Auto-generated method stub
-
+		sendDatas = data;
 	}
 
 	@Override
