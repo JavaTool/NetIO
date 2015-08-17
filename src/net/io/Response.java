@@ -1,5 +1,6 @@
 package net.io;
 
+import java.io.IOException;
 import java.io.OutputStream;
 
 public interface Response extends ErrorInfo {
@@ -14,6 +15,6 @@ public interface Response extends ErrorInfo {
 	
 	int getStatus();
 	
-	void output(OutputStream os) throws Exception;
+	void output(OutputStream os) throws IOException;
 
 }

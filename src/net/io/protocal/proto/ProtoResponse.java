@@ -1,5 +1,6 @@
 package net.io.protocal.proto;
 
+import java.io.IOException;
 import java.io.OutputStream;
 
 import net.io.Response;
@@ -35,7 +36,7 @@ public abstract class ProtoResponse implements Response {
 	}
 
 	@Override
-	public void output(OutputStream os) throws Exception {
+	public void output(OutputStream os) throws IOException {
 		os.write(sendDatas);
 	}
 

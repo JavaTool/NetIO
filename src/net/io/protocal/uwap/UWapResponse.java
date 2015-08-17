@@ -3,6 +3,7 @@ package net.io.protocal.uwap;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutput;
 import java.io.DataOutputStream;
+import java.io.IOException;
 import java.io.OutputStream;
 
 import net.io.Response;
@@ -42,7 +43,7 @@ final class UWapResponse implements Response {
 		this.sendMessageId = sendMessageId;
 	}
 
-	private void build() throws Exception {
+	private void build() throws IOException {
 		ByteArrayOutputStream stream = new ByteArrayOutputStream();
 		DataOutput output = new DataOutputStream(stream);
 		if (hasError()) {
@@ -83,7 +84,7 @@ final class UWapResponse implements Response {
 	}
 
 	@Override
-	public void output(OutputStream os) throws Exception {
+	public void output(OutputStream os) throws IOException {
 		build();
 		DataOutput out = new DataOutputStream(os);
 		int dataLen = sendDatas.length + HEAD.length + 8;
