@@ -3,6 +3,7 @@ package net.io.http;
 import java.io.IOException;
 import java.io.OutputStream;
 
+import javax.servlet.AsyncContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -42,6 +43,7 @@ public abstract class HttpReceiver extends HttpServlet implements HTTPStatus {
 			log.info("Session id is {}.", session.getId());
 			int messageId = Integer.parseInt(req.getHeader(HttpConnectUtil.MESSAGEID));
 			byte[] decrypt = HttpConnectUtil.getRequestProtoContent(req);
+			AsyncContext asyncContext = req.startAsync();
 			MessageHandle opcodeHandle = ((MessageHandle) req.getServletContext().getAttribute(MessageHandle.class.getName()));
 			resp = opcodeHandle.handle(decrypt, getIpAddr(req), messageId, session.getId(), null);
 		} catch (Exception e) {

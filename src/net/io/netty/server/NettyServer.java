@@ -16,13 +16,13 @@ import org.slf4j.LoggerFactory;
  * Netty服务器
  * @author 	fuhuiyuan
  */
-public class NettyServer implements Runnable {
+public class NettyServer {
 	
 	private final Logger log;
+	/**消息接收器*/
+	private final MessageHandle messageHandle;
 	/**端口*/
 	private int port;
-	/**消息接收器*/
-	private MessageHandle messageHandle;
 
 	public NettyServer(int port, MessageHandle messageHandle) {
 		this.port = port;
@@ -33,7 +33,7 @@ public class NettyServer implements Runnable {
 	/**
 	 * TCP服务器启动函数
 	 */
-	private void bootStrap() throws Exception {
+	public <T> void bootStrap(ChannelOption<T> option, T value) throws Exception {
 		EventLoopGroup bossGroup = new NioEventLoopGroup();
 		EventLoopGroup workerGroup = new NioEventLoopGroup();
 		try {
@@ -47,15 +47,6 @@ public class NettyServer implements Runnable {
 		} finally {
 			bossGroup.shutdownGracefully();
 			workerGroup.shutdownGracefully();
-		}
-	}
-
-	@Override
-	public void run() {
-		try {
-			bootStrap();
-		} catch (Exception e) {
-			log.error("[TCP StartUp Error]", e);
 		}
 	}
 
