@@ -4,7 +4,7 @@ package net.io.http;
  * HTTP状态
  * @author 	fuhuiyuan
  */
-public interface HTTPStatus {
+public interface HttpStatus {
 	
 	/**连接处理成功*/
 	int HTTP_STATUS_SUCCESS = 200;

@@ -22,7 +22,7 @@ import org.slf4j.LoggerFactory;
  * Http消息接收器
  * @author 	fuhuiyuan
  */
-public abstract class HttpReceiver extends HttpServlet implements HTTPStatus {
+public abstract class HttpReceiver extends HttpServlet implements HttpStatus {
 	
 	private static final Logger log = LoggerFactory.getLogger(HttpReceiver.class);
 

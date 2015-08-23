@@ -20,14 +20,14 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import net.io.http.HTTPStatus;
+import net.io.http.HttpStatus;
 import net.io.http.HttpBackInfo;
 
 /**
  * HTTP连接工具
  * @author	fuhuiyuan
  */
-public abstract class HttpConnectUtil implements HTTPStatus {
+public abstract class HttpConnectUtil implements HttpStatus {
 	
 	/**HTTP消息头的消息id名称*/
 	public static final String MESSAGEID = "MessageId";
