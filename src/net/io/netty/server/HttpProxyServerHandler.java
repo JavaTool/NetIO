@@ -1,12 +1,14 @@
 package net.io.netty.server;
 
 import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.http.Cookie;
 import io.netty.handler.codec.http.CookieDecoder;
 import io.netty.handler.codec.http.DefaultFullHttpResponse;
+import io.netty.handler.codec.http.FullHttpResponse;
 import io.netty.handler.codec.http.HttpContent;
 import io.netty.handler.codec.http.HttpHeaders;
 import io.netty.handler.codec.http.HttpRequest;
@@ -14,6 +16,7 @@ import io.netty.handler.codec.http.HttpResponse;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import io.netty.handler.codec.http.HttpVersion;
 import io.netty.handler.codec.http.ServerCookieEncoder;
+import io.netty.handler.codec.rtsp.RtspHeaders.Values;
 import io.netty.util.Attribute;
 import io.netty.util.AttributeKey;
 
@@ -63,7 +66,7 @@ public class HttpProxyServerHandler extends SimpleChannelInboundHandler<Object> 
 		Attribute<NettyHttpSession> session = channel.attr(SESSION);
 		NettyHttpSession httpSession = session.get() ;
 		if (httpSession == null) {
-			httpSession = new NettyHttpSession(channel.id().asLongText());
+			httpSession = new NettyHttpSession(channel.id().asLongText(), HttpHeaders.isKeepAlive(req));
 			httpSession.setMessageId(headers.get(MESSAGE_ID));
 			session.set(httpSession);
 		}
@@ -84,11 +87,16 @@ public class HttpProxyServerHandler extends SimpleChannelInboundHandler<Object> 
 //		IMessage message = new NetMessage(messageId, datas, HttpConnectUtil.getIp(address), sessionId, channel);
 		
 		Set<Cookie> cookies = CookieDecoder.decode(MessageFormat.format(COOKIE, sessionId, path));
-		HttpResponse response = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK);
+		FullHttpResponse response = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK, Unpooled.wrappedBuffer(datas));
 		HttpHeaders headers = response.headers();
 		for (Cookie cookie : cookies) {
 			headers.add(HttpHeaders.Names.SET_COOKIE, ServerCookieEncoder.encode(cookie));
 		}
+        response.headers().set(HttpHeaders.Names.CONTENT_TYPE, "text/plain");
+        response.headers().set(HttpHeaders.Names.CONTENT_LENGTH, response.content().readableBytes());
+        if (httpSession.isKeepAlive()) {
+            response.headers().set(HttpHeaders.Names.CONNECTION, Values.KEEP_ALIVE);
+        }
 		channel.writeAndFlush(response);
 		System.out.println("send");
 	}
@@ -116,8 +124,11 @@ public class HttpProxyServerHandler extends SimpleChannelInboundHandler<Object> 
 		
 		private final String id;
 		
-		public NettyHttpSession(String id) {
+		private final boolean isKeepAlive;
+		
+		public NettyHttpSession(String id, boolean isKeepAlive) {
 			this.id = id;
+			this.isKeepAlive = isKeepAlive;
 		}
 
 		public int getContentLength() {
@@ -138,6 +149,10 @@ public class HttpProxyServerHandler extends SimpleChannelInboundHandler<Object> 
 
 		public void setMessageId(String messageId) {
 			this.messageId = messageId;
+		}
+
+		public boolean isKeepAlive() {
+			return isKeepAlive;
 		}
 		
 	}
