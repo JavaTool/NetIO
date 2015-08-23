@@ -8,6 +8,6 @@ public interface IContent {
 	
 	byte[] getValue();
 	
-	void send(byte[] datas);
+	Sender getSender();
 
 }

@@ -2,6 +2,9 @@ package net.dipatch;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 public class DispatchManager implements IDispatchManager {
 	
@@ -9,9 +12,15 @@ public class DispatchManager implements IDispatchManager {
 	
 	protected final IContentHandler handler;
 	
-	public DispatchManager(IContentHandler handler) {
+	protected final ScheduledExecutorService executorService;
+	
+	protected final int sleepTime;
+	
+	public DispatchManager(IContentHandler handler, int sleepTime, int corePoolSize) {
 		this.handler = handler;
+		this.sleepTime = sleepTime;
 		dispatchs = new ConcurrentHashMap<String, IDispatchManager>();
+		executorService = new ScheduledThreadPoolExecutor(corePoolSize);
 	}
 
 	@Override
@@ -29,10 +38,18 @@ public class DispatchManager implements IDispatchManager {
 	protected synchronized IDispatchManager fetch(String key) {
 		IDispatchManager dispatch = dispatchs.get(key);
 		if (dispatch == null) {
-			dispatch = new Dispatch(handler);
-			dispatchs.put(key, dispatch);
+			Dispatch dis = new Dispatch(handler);
+			executorService.scheduleWithFixedDelay(dis, sleepTime, sleepTime, TimeUnit.MILLISECONDS);
+			dispatchs.put(key, dis);
+			return dis;
+		} else {
+			return dispatch;
 		}
-		return dispatch;
+	}
+	
+	public static void main(String[] args) {
+		DispatchManager dispatchManager = new DispatchManager(null, 100, 10);
+		dispatchManager.fetch("111");
 	}
 
 }

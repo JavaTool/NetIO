@@ -23,22 +23,10 @@ public class Dispatch implements IDispatchManager, Runnable {
 	
 	@Override
 	public void run() {
-		while (true) {
-			try {
-				long time = System.currentTimeMillis();
-				work();
-				time = System.currentTimeMillis() - time;
-				
-				if (time < getSLEEP_TIME()) {
-					synchronized (this) {
-						wait(getSLEEP_TIME() - time);
-					}
-				} else {
-					Thread.yield();
-				}
-			} catch (Exception e) {
-				log.error("", e);
-			}
+		try {
+			work();
+		} catch (Exception e) {
+			log.error("", e);
 		}
 	}
 	
@@ -55,7 +43,13 @@ public class Dispatch implements IDispatchManager, Runnable {
 
 	@Override
 	public void fireDispatch(IContent content) {
+		long time = System.currentTimeMillis();
 		handler.hanle(content);
+		time = System.currentTimeMillis() - time;
+		
+		if (time > getSLEEP_TIME()) {
+			log.warn("Too long time {} ms at {}.", time, content.getMessageId());
+		}
 	}
 
 	public static int getSLEEP_TIME() {
