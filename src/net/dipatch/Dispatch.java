@@ -6,19 +6,19 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class Dispatch implements IDispatchManager, Runnable {
+public class Dispatch<T extends IContent> implements IDispatchManager<T>, Runnable {
 	
 	protected static final Logger log = LoggerFactory.getLogger(Dispatch.class);
 	
 	private static int SLEEP_TIME;
 	
-	protected final Queue<IContent> contents;
+	protected final Queue<T> contents;
 	
 	protected final IContentHandler handler;
 	
 	public Dispatch(IContentHandler handler) {
 		this.handler = handler;
-		contents = new ConcurrentLinkedQueue<IContent>();
+		contents = new ConcurrentLinkedQueue<T>();
 	}
 	
 	@Override
@@ -37,12 +37,12 @@ public class Dispatch implements IDispatchManager, Runnable {
 	}
 
 	@Override
-	public void addDispatch(IContent content) {
+	public void addDispatch(T content) {
 		contents.add(content);
 	}
 
 	@Override
-	public void fireDispatch(IContent content) {
+	public void fireDispatch(T content) {
 		long time = System.currentTimeMillis();
 		handler.hanle(content);
 		time = System.currentTimeMillis() - time;

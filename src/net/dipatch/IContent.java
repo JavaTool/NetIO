@@ -4,7 +4,7 @@ public interface IContent {
 	
 	String getSessionId();
 	
-	int getMessageId();
+	String getMessageId();
 	
 	byte[] getValue();
 	

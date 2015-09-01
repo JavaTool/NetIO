@@ -6,9 +6,9 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-public class DispatchManager implements IDispatchManager {
+public class DispatchManager<T extends IContent> implements IDispatchManager<T> {
 	
-	protected final Map<String, IDispatchManager> dispatchs;
+	protected final Map<String, IDispatchManager<T>> dispatchs;
 	
 	protected final IContentHandler handler;
 	
@@ -19,26 +19,26 @@ public class DispatchManager implements IDispatchManager {
 	public DispatchManager(IContentHandler handler, int sleepTime, int corePoolSize) {
 		this.handler = handler;
 		this.sleepTime = sleepTime;
-		dispatchs = new ConcurrentHashMap<String, IDispatchManager>();
+		dispatchs = new ConcurrentHashMap<String, IDispatchManager<T>>();
 		executorService = new ScheduledThreadPoolExecutor(corePoolSize);
 	}
 
 	@Override
-	public void addDispatch(IContent content) {
-		IDispatchManager dispatch = fetch(content.getSessionId());
+	public void addDispatch(T content) {
+		IDispatchManager<T> dispatch = fetch(content.getSessionId());
 		dispatch.addDispatch(content);
 	}
 
 	@Override
-	public void fireDispatch(IContent content) {
-		IDispatchManager dispatch = fetch(content.getSessionId());
+	public void fireDispatch(T content) {
+		IDispatchManager<T> dispatch = fetch(content.getSessionId());
 		dispatch.fireDispatch(content);
 	}
 	
-	protected synchronized IDispatchManager fetch(String key) {
-		IDispatchManager dispatch = dispatchs.get(key);
+	protected synchronized IDispatchManager<T> fetch(String key) {
+		IDispatchManager<T> dispatch = dispatchs.get(key);
 		if (dispatch == null) {
-			Dispatch dis = new Dispatch(handler);
+			Dispatch<T> dis = new Dispatch<T>(handler);
 			executorService.scheduleWithFixedDelay(dis, sleepTime, sleepTime, TimeUnit.MILLISECONDS);
 			dispatchs.put(key, dis);
 			return dis;
@@ -48,7 +48,7 @@ public class DispatchManager implements IDispatchManager {
 	}
 	
 	public static void main(String[] args) {
-		DispatchManager dispatchManager = new DispatchManager(null, 100, 10);
+		DispatchManager<IContent> dispatchManager = new DispatchManager<IContent>(null, 100, 10);
 		dispatchManager.fetch("111");
 	}
 

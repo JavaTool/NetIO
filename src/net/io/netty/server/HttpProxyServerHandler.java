@@ -12,7 +12,6 @@ import io.netty.handler.codec.http.FullHttpResponse;
 import io.netty.handler.codec.http.HttpContent;
 import io.netty.handler.codec.http.HttpHeaders;
 import io.netty.handler.codec.http.HttpRequest;
-import io.netty.handler.codec.http.HttpResponse;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import io.netty.handler.codec.http.HttpVersion;
 import io.netty.handler.codec.http.ServerCookieEncoder;
@@ -20,14 +19,16 @@ import io.netty.handler.codec.rtsp.RtspHeaders.Values;
 import io.netty.util.Attribute;
 import io.netty.util.AttributeKey;
 
-import java.net.SocketAddress;
 import java.text.MessageFormat;
 import java.util.Set;
+
+import net.dipatch.IContent;
+import net.dipatch.IDispatchManager;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class HttpProxyServerHandler extends SimpleChannelInboundHandler<Object> {
+public class HttpProxyServerHandler<T extends IContent> extends SimpleChannelInboundHandler<Object> {
 	
 	private static final Logger log = LoggerFactory.getLogger(HttpProxyServerHandler.class);
 	
@@ -41,8 +42,14 @@ public class HttpProxyServerHandler extends SimpleChannelInboundHandler<Object> 
 	
 	private final String path;
 	
-	public HttpProxyServerHandler(String path) {
+	private final IDispatchManager<T> dispatchManager;
+	
+	private final INettyContentFactory<T> nettyContentFactory;
+	
+	public HttpProxyServerHandler(String path, IDispatchManager<T> dispatchManager, INettyContentFactory<T> nettyContentFactory) {
 		this.path = path;
+		this.dispatchManager = dispatchManager;
+		this.nettyContentFactory = nettyContentFactory;
 	}
 	
 	@Override
@@ -75,16 +82,16 @@ public class HttpProxyServerHandler extends SimpleChannelInboundHandler<Object> 
 	}
 	
 	private void readContent(Channel channel, NettyHttpSession httpSession, ByteBuf content) {
-		SocketAddress address = channel.remoteAddress();
+//		SocketAddress address = channel.remoteAddress();
 		int contentLength = httpSession.getContentLength();
-		String messageId = httpSession.getMessageId();
+//		String messageId = httpSession.getMessageId();
 		byte[] datas = new byte[contentLength < 0 ? 0 : contentLength];
 		content.readBytes(datas);
 		String sessionId = httpSession.getId();
-		System.out.println(sessionId);
-		System.out.println("contentLength = " + contentLength);
+		log.debug("sessionId : {}", sessionId);
 		
-//		IMessage message = new NetMessage(messageId, datas, HttpConnectUtil.getIp(address), sessionId, channel);
+		T nettyContent = nettyContentFactory.createContent(channel, httpSession, content);
+		dispatchManager.addDispatch(nettyContent);
 		
 		Set<Cookie> cookies = CookieDecoder.decode(MessageFormat.format(COOKIE, sessionId, path));
 		FullHttpResponse response = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK, Unpooled.wrappedBuffer(datas));
@@ -98,7 +105,6 @@ public class HttpProxyServerHandler extends SimpleChannelInboundHandler<Object> 
             response.headers().set(HttpHeaders.Names.CONNECTION, Values.KEEP_ALIVE);
         }
 		channel.writeAndFlush(response);
-		System.out.println("send");
 	}
 
 	@Override
@@ -110,13 +116,12 @@ public class HttpProxyServerHandler extends SimpleChannelInboundHandler<Object> 
 
 	@Override
 	public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-		log.info("[Coming Out Error]IP:{}", ctx.channel().remoteAddress());
+		log.info("[Coming Out Error]IP:{} ; Error:{}", ctx.channel().remoteAddress(), cause.getMessage());
 		ctx.channel().close();
 		ctx.close();
-		log.info(cause.getMessage());
 	}
 	
-	private static class NettyHttpSession {
+	private static class NettyHttpSession implements INettyHttpSession {
 		
 		private int contentLength;
 		
@@ -131,6 +136,7 @@ public class HttpProxyServerHandler extends SimpleChannelInboundHandler<Object> 
 			this.isKeepAlive = isKeepAlive;
 		}
 
+		@Override
 		public int getContentLength() {
 			return contentLength;
 		}
@@ -139,10 +145,12 @@ public class HttpProxyServerHandler extends SimpleChannelInboundHandler<Object> 
 			this.contentLength = contentLength;
 		}
 
+		@Override
 		public String getId() {
 			return id;
 		}
 
+		@Override
 		public String getMessageId() {
 			return messageId;
 		}
@@ -151,6 +159,7 @@ public class HttpProxyServerHandler extends SimpleChannelInboundHandler<Object> 
 			this.messageId = messageId;
 		}
 
+		@Override
 		public boolean isKeepAlive() {
 			return isKeepAlive;
 		}

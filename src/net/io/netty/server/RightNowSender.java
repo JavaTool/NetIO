@@ -5,11 +5,11 @@ import io.netty.buffer.Unpooled;
 import io.netty.channel.Channel;
 import net.dipatch.Sender;
 
-public class NettySender implements Sender {
+public class RightNowSender implements Sender {
 	
 	protected final Channel channel;
 	
-	public NettySender(Channel channel) {
+	public RightNowSender(Channel channel) {
 		this.channel = channel;
 	}
 
@@ -17,6 +17,12 @@ public class NettySender implements Sender {
 	public void send(byte[] datas) throws Exception {
 		ByteBuf result = Unpooled.copiedBuffer(datas);
 		channel.writeAndFlush(result);
+	}
+
+	@Deprecated
+	@Override
+	public byte[] getSendDatas() {
+		return null;
 	}
 
 }

@@ -1,9 +1,9 @@
 package net.dipatch;
 
-public interface IDispatchManager {
+public interface IDispatchManager<T extends IContent> {
 	
-	void addDispatch(IContent content);
+	void addDispatch(T content);
 	
-	void fireDispatch(IContent content);
+	void fireDispatch(T content);
 
 }
