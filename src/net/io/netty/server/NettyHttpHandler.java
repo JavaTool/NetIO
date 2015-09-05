@@ -13,6 +13,7 @@ import net.dipatch.Content;
 import net.dipatch.IContent;
 import net.dipatch.IDispatchManager;
 import net.dipatch.ISender;
+import net.io.netty.INettyContentFactory;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

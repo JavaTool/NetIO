@@ -12,7 +12,7 @@ import java.io.IOException;
 import net.dipatch.Content;
 import net.dipatch.IContent;
 import net.dipatch.ISender;
-import net.io.netty.server.INettyContentFactory;
+import net.io.netty.INettyContentFactory;
 import net.io.netty.server.INettyHttpSession;
 
 import org.slf4j.Logger;

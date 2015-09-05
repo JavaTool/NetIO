@@ -5,6 +5,7 @@ import io.netty.channel.ChannelPipeline;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
 import net.dipatch.IContentHandler;
+import net.io.netty.INettyContentFactory;
 
 /**
  * TCP处理管线

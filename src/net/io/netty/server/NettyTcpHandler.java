@@ -15,6 +15,7 @@ import java.io.IOException;
 import net.dipatch.IContent;
 import net.dipatch.IContentHandler;
 import net.dipatch.ISender;
+import net.io.netty.INettyContentFactory;
 import net.io.netty.Packet;
 
 import org.slf4j.Logger;
