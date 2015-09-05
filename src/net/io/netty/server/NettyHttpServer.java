@@ -1,8 +1,6 @@
 package net.io.netty.server;
 
 import io.netty.bootstrap.ServerBootstrap;
-import io.netty.buffer.ByteBuf;
-import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
@@ -14,15 +12,10 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.codec.http.HttpServerCodec;
 import io.netty.handler.timeout.IdleStateHandler;
-import io.netty.util.Attribute;
-import io.netty.util.AttributeKey;
 
 import java.net.InetSocketAddress;
 
-import net.dipatch.DispatchManager;
-import net.dipatch.IContent;
 import net.dipatch.IDispatchManager;
-import net.dipatch.ISender;
 import net.io.netty.INettyContentFactory;
 
 import org.slf4j.Logger;
@@ -102,85 +95,6 @@ public class NettyHttpServer implements Runnable {
 		log.info("Shut down all event loops to terminate all threads.");
 		serverBootstrap.group().shutdownGracefully();
 		serverBootstrap.childGroup().shutdownGracefully();
-	}
-	
-	/**
-	 * test
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		try {
-			new NettyHttpServer(new DispatchManager(null, 100, 10), new INettyContentFactory() {
-
-				@Override
-				public IContent createContent(final Channel channel, ByteBuf content, INettyHttpSession httpSession) {
-					int contentLength = httpSession.getContentLength();
-					final byte[] datas = new byte[contentLength < 0 ? 0 : contentLength];
-					content.readBytes(datas);
-					final String sessionId = httpSession.getId();
-					final int messageId = httpSession.getMessageId();
-					final String ip = channel.remoteAddress().toString();
-					return new IContent() {
-						
-						private final ISender sender = new ISender() {
-							
-							@Deprecated
-							@Override
-							public void send(byte[] datas, String messageId) throws Exception {}
-
-							@Override
-							public <X, Y extends X> void setAttribute(String key, Class<X> clz, Y value) {
-								AttributeKey<X> attributeKey = AttributeKey.valueOf(key);
-								channel.attr(attributeKey).set(value);
-							}
-
-							@Override
-							public <X> X getAttribute(String key, Class<X> clz) {
-								AttributeKey<X> attributeKey = AttributeKey.valueOf(key);
-								Attribute<X> attribute = channel.attr(attributeKey);
-								return attribute == null ? null : attribute.get();
-							}
-							
-						};
-						
-						@Override
-						public byte[] getDatas() {
-							return datas;
-						}
-						
-						@Override
-						public String getSessionId() {
-							return sessionId;
-						}
-						
-						@Override
-						public ISender getSender() {
-							return sender;
-						}
-						
-						@Override
-						public int getMessageId() {
-							return messageId;
-						}
-
-						@Override
-						public String getIp() {
-							return ip;
-						}
-						
-					};
-				}
-
-				@Override
-				public IContent createContent(Channel channel, ByteBuf content, ISender sender) {
-					// TODO Auto-generated method stub
-					return null;
-				}
-				
-			}, 10, 10, 8888, "localhost").bootStrap();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 	}
 
 }
