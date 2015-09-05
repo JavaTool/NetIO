@@ -2,10 +2,10 @@ package net.io.protocal.proto;
 
 import java.io.InputStream;
 
-import net.io.IOFactory;
+import net.io.IRequestAndResponseFactory;
 import net.io.Request;
 
-public abstract class ProtoIOFactory implements IOFactory {
+public abstract class ProtoIOFactory implements IRequestAndResponseFactory {
 
 	@Override
 	public Request createRequest(String ip, int receiveMessageId, byte[] datas) {

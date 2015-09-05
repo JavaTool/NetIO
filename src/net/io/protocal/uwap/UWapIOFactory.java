@@ -2,11 +2,11 @@ package net.io.protocal.uwap;
 
 import java.io.InputStream;
 
-import net.io.IOFactory;
+import net.io.IRequestAndResponseFactory;
 import net.io.Request;
 import net.io.Response;
 
-public class UWapIOFactory implements IOFactory {
+public class UWapIOFactory implements IRequestAndResponseFactory {
 
 	@Override
 	public Request createRequest(String ip, int receiveMessageId, byte[] datas) {

@@ -4,7 +4,7 @@ package net.io;
  * 错误信息接收者
  * @author	fuhuiyuan
  */
-public interface ErrorInfo {
+public interface IErrorInfo {
 	
 	/**
 	 * 设置错误内容

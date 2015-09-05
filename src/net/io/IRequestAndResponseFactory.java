@@ -2,7 +2,7 @@ package net.io;
 
 import java.io.InputStream;
 
-public interface IOFactory {
+public interface IRequestAndResponseFactory {
 	
 	Request createRequest(String ip, int receiveMessageId, byte[] datas);
 	

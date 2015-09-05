@@ -3,7 +3,7 @@ package net.io;
 import java.io.IOException;
 import java.io.OutputStream;
 
-public interface Response extends ErrorInfo {
+public interface Response extends IErrorInfo {
 	
 	byte[] NULL_SEND_DATAS = new byte[0];
 	
