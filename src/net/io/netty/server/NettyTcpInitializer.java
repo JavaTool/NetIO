@@ -4,18 +4,21 @@ import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
-import net.io.MessageHandle;
+import net.dipatch.IContentHandler;
 
 /**
- * Netty初始化管理器
+ * TCP处理管线
  * @author 	fuhuiyuan
  */
-public class NettyServerInitializer extends ChannelInitializer<SocketChannel> {
+public class NettyTcpInitializer extends ChannelInitializer<SocketChannel> {
 	
-	private final MessageHandle messageHandle;
+	private final IContentHandler contentHandler;
 	
-	public NettyServerInitializer(MessageHandle messageHandle) {
-		this.messageHandle = messageHandle;
+	private final INettyContentFactory contentFactory;
+	
+	public NettyTcpInitializer(IContentHandler contentHandler, INettyContentFactory contentFactory) {
+		this.contentHandler = contentHandler;
+		this.contentFactory = contentFactory;
 	}
 
 	@Override
@@ -23,7 +26,7 @@ public class NettyServerInitializer extends ChannelInitializer<SocketChannel> {
 		ChannelPipeline pipeline = ch.pipeline();
 		// 粘包处理
 		pipeline.addLast("Decoder", new LengthFieldBasedFrameDecoder(Integer.MAX_VALUE, 0, 4, 0, 4));
-		pipeline.addLast("Handler", new NettyServerHandler(messageHandle));
+		pipeline.addLast("Handler", new NettyTcpHandler(contentHandler, contentFactory));
 	}
 
 }

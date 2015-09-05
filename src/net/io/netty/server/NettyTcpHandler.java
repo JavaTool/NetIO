@@ -5,41 +5,38 @@ import io.netty.buffer.Unpooled;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
-import io.netty.channel.group.ChannelGroup;
-import io.netty.channel.group.DefaultChannelGroup;
-import io.netty.util.concurrent.GlobalEventExecutor;
+import io.netty.util.Attribute;
+import io.netty.util.AttributeKey;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.net.SocketAddress;
 
-import net.io.MessageHandle;
+import net.dipatch.IContent;
+import net.dipatch.IContentHandler;
+import net.dipatch.ISender;
 import net.io.netty.Packet;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Netty处理器
+ * TCP处理器
  * @author 	fuhuiyuan
  */
-public class NettyServerHandler extends SimpleChannelInboundHandler<ByteBuf> {
+public class NettyTcpHandler extends SimpleChannelInboundHandler<ByteBuf> {
 	
-	/**
-	 * Channel组
-	 */
-	protected static final ChannelGroup channels = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
+	protected static final AttributeKey<ISender> SENDER_KEY = AttributeKey.valueOf("SENDER_KEY");
 	
-	protected static final Logger log = LoggerFactory.getLogger(NettyServerHandler.class);
-	
+	protected static final Logger log = LoggerFactory.getLogger(NettyTcpHandler.class);
 	/**消息处理器*/
-	private final MessageHandle messageHandle;
+	private final IContentHandler contentHandler;
+	/**消息工厂*/
+	private final INettyContentFactory contentFactory;
 	
-	public NettyServerHandler(MessageHandle messageHandle) {
-		this.messageHandle = messageHandle;
+	public NettyTcpHandler(IContentHandler contentHandler, INettyContentFactory contentFactory) {
+		this.contentHandler = contentHandler;
+		this.contentFactory = contentFactory;
 	}
 
 	@Override
@@ -56,36 +53,25 @@ public class NettyServerHandler extends SimpleChannelInboundHandler<ByteBuf> {
 
 	@Override
 	public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-		log.info("[Coming Out Error]IP:{}", ctx.channel().remoteAddress());
+		log.info("[Coming Out Error]IP:{} ; ERROR:{}", ctx.channel().remoteAddress(), cause.getMessage());
 		ctx.channel().close();
 		ctx.close();
-		log.info(cause.getMessage());
 	}
 
-	/**
-	 * 处理接受的报文数据
-	 */
 	@Override
 	protected void channelRead0(ChannelHandlerContext ctx, ByteBuf msg) throws Exception {
 		Channel channel = ctx.channel();
-		SocketAddress address = channel.remoteAddress();
-		log.info("[Coming in]IP:{}MSG:{}", address);
-		byte[] messageBytes = new byte[msg.capacity()];
-		msg.readBytes(messageBytes);
-
-		Packet packet = readPacket(messageBytes);
-		messageHandle.handle(packet.getValue(), address.toString().split(":")[0].replace("/", ""), packet.getMessageId(), "", channel);
-	}
-	
-	private Packet readPacket(byte[] content) throws IOException {
-		DataInputStream data = new DataInputStream(new ByteArrayInputStream(content));
-		Packet packet = new Packet();
-		packet.setMessageId(data.readInt());
-		int messageLength = data.readInt();
-		byte[] value = new byte[messageLength];
-		data.read(value);
-		packet.setValue(value);
-		return packet;
+		Attribute<ISender> attribute = channel.attr(SENDER_KEY);
+		ISender sender = attribute.get();
+		if (sender == null) {
+			sender = new NettyTcpSender(channel);
+			attribute.set(sender);
+		}
+		
+		IContent content = contentFactory.createContent(channel, msg, sender);
+		if (content != null) {
+			contentHandler.handle(content);
+		}
 	}
 
 	/**

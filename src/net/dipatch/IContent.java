@@ -15,7 +15,7 @@ public interface IContent {
 	 * 获取消息id
 	 * @return	消息id
 	 */
-	String getMessageId();
+	int getMessageId();
 	/**
 	 * 获取地址
 	 * @return	地址

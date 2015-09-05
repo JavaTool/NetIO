@@ -11,6 +11,7 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
+import net.dipatch.IContentHandler;
 
 public class NettyClient {
 	
@@ -22,10 +23,10 @@ public class NettyClient {
 	
 	protected Channel socketChannel;
 	
-	public NettyClient(final NettyClientCallback callback, int port, String host) throws Exception {
+	public NettyClient(final IContentHandler contentHandler, final NettyClientContentFactory contentFactory, int port, String host) throws Exception {
 		group = new NioEventLoopGroup();
 		bootstrap = new Bootstrap();
-		nettyClientHandler = new NettyClientHandler(callback);
+		nettyClientHandler = new NettyClientHandler(contentHandler, contentFactory);
 		bootstrap.group(group).channel(NioSocketChannel.class).option(ChannelOption.SO_KEEPALIVE, true);
 		bootstrap.remoteAddress(host, port);
 		bootstrap.handler(new ChannelInitializer<SocketChannel>() {
@@ -39,6 +40,7 @@ public class NettyClient {
     	// 发起异步链接操作
     	ChannelFuture channelFuture = bootstrap.connect(host, port).sync();
     	if (channelFuture.isSuccess()) {
+    		System.out.println("success");
     		socketChannel = channelFuture.channel();
     	}
 	}
@@ -48,6 +50,7 @@ public class NettyClient {
 		clientMessage.writeInt(data.length);
 	    clientMessage.writeBytes(data);
     	socketChannel.writeAndFlush(clientMessage);
+    	System.out.println("send");
 	}
 	
 	public void close() {

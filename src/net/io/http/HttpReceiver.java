@@ -9,8 +9,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import net.io.MessageHandle;
-import net.io.RedirectResponse;
+import net.dipatch.Content;
+import net.dipatch.IContent;
+import net.dipatch.IContentHandler;
+import net.dipatch.ISender;
 import net.io.Response;
 import net.io.util.HttpConnectUtil;
 
@@ -26,6 +28,8 @@ public abstract class HttpReceiver extends HttpServlet implements HttpStatus {
 	private static final Logger log = LoggerFactory.getLogger(HttpReceiver.class);
 
 	private static final long serialVersionUID = 1L;
+	
+	public static final String SESSION_IP = "sessionIp";
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -36,37 +40,27 @@ public abstract class HttpReceiver extends HttpServlet implements HttpStatus {
 	protected void doPost(HttpServletRequest req, HttpServletResponse response) throws ServletException, IOException {
 		response.setCharacterEncoding("UTF-8");
 		OutputStream os = response.getOutputStream();
-		Response resp;
+		HttpSession session = req.getSession();
+		String ip = getIpAddr(req);
+		
+		if (session.getAttribute(SESSION_IP) == null) {
+			session.setAttribute(SESSION_IP, ip);
+		}
+		
+		ISender sender = new HttpResponseSender(response, session);
 		try {
-			HttpSession session = req.getSession();
 			log.info("Session id is {}.", session.getId());
-			int messageId = Integer.parseInt(req.getHeader(HttpConnectUtil.MESSAGEID));
+			int messageId = Integer.parseInt(req.getHeader("MessageId"));
 			byte[] decrypt = HttpConnectUtil.getRequestProtoContent(req);
-			MessageHandle opcodeHandle = ((MessageHandle) req.getServletContext().getAttribute(MessageHandle.class.getName()));
-			resp = opcodeHandle.handle(decrypt, getIpAddr(req), messageId, session.getId(), null);
+			
+			IContent content = new Content(session.getId(), messageId, ip, decrypt, sender);
+			IContentHandler contentHandler = (IContentHandler) req.getServletContext().getAttribute(IContentHandler.class.getName());
+			contentHandler.handle(content);
 		} catch (Exception e) {
 			error(e, response, os);
 			os.flush();
 			os.close();
 			return;
-		}
-		
-		if (resp instanceof RedirectResponse) {
-//			response.sendRedirect(((RedirectResponse) resp).getUrl());
-			req.getRequestDispatcher(((RedirectResponse) resp).getUrl()).forward(req, response);
-		} else {
-			try {
-				int sendMessageId = resp.getSendMessageId();
-				response.setContentType("text/plain; charset=UTF-8; MessageId=" + sendMessageId);
-				log.info("sendMessageId = " + sendMessageId);
-				response.setStatus(resp.getStatus());
-				resp.output(os);
-			} catch (Exception e) {
-				error(e, response, os);
-			} finally {
-				os.flush();
-				os.close();
-			}
 		}
 	}
 	

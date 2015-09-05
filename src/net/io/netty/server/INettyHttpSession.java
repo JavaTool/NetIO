@@ -8,7 +8,7 @@ public interface INettyHttpSession {
 	
 	String getId();
 	
-	String getMessageId();
+	int getMessageId();
 	
 	boolean isKeepAlive();
 	

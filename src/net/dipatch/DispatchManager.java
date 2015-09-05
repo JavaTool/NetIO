@@ -1,10 +1,11 @@
 package net.dipatch;
 
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+
+import com.google.common.collect.Maps;
 
 /**
  * 默认的分配管理器
@@ -25,7 +26,7 @@ public class DispatchManager implements IDispatchManager {
 		this.handler = handler;
 		this.sleepTime = sleepTime;
 		Dispatch.setSLEEP_TIME(sleepTime);
-		dispatchs = new ConcurrentHashMap<String, IDispatch>();
+		dispatchs = Maps.newConcurrentMap();
 		executorService = new ScheduledThreadPoolExecutor(corePoolSize);
 	}
 
