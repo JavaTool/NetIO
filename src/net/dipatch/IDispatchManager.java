@@ -1,9 +1,16 @@
 package net.dipatch;
 
-public interface IDispatchManager<T extends IContent> {
+/**
+ * 分配器管理器
+ * @author 	fuhuiyuan
+ */
+public interface IDispatchManager extends IDispatch {
 	
-	void addDispatch(T content);
-	
-	void fireDispatch(T content);
+	/**
+	 * 断开
+	 * @param 	content
+	 * 			断开消息
+	 */
+	void disconnect(IContent content);
 
 }

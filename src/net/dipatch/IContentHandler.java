@@ -1,7 +1,17 @@
 package net.dipatch;
 
+/**
+ * 消息接收器
+ * @author 	fuhuiyuan
+ */
 public interface IContentHandler {
 	
-	void hanle(IContent content);
+	/**
+	 * 接收消息
+	 * @param 	content
+	 * 			消息
+	 * @throws 	Exception
+	 */
+	void handle(IContent content) throws Exception;
 
 }

@@ -1,5 +1,7 @@
 package net.io.netty.server;
 
+import net.dipatch.ISender;
+
 public interface INettyHttpSession {
 	
 	int getContentLength();
@@ -9,5 +11,7 @@ public interface INettyHttpSession {
 	String getMessageId();
 	
 	boolean isKeepAlive();
+	
+	ISender getSender();
 
 }
