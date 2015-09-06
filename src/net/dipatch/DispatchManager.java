@@ -1,11 +1,12 @@
 package net.dipatch;
 
+import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
 
-import com.google.common.collect.Maps;
+import com.google.common.util.concurrent.Service;
 
 /**
  * 默认的分配管理器
@@ -19,14 +20,14 @@ public class DispatchManager implements IDispatchManager {
 	protected final IContentHandler handler;
 	/**任务执行服务*/
 	protected final ScheduledExecutorService executorService;
-	/**休眠时间*/
-	protected final int sleepTime;
 	
-	public DispatchManager(IContentHandler handler, int sleepTime, int corePoolSize) {
+	protected final List<Service> serviceList;
+	
+	public DispatchManager(IContentHandler handler, int sleepTime, int corePoolSize, List<Service> serviceList) {
 		this.handler = handler;
-		this.sleepTime = sleepTime;
+		this.serviceList = serviceList;
 		Dispatch.setSLEEP_TIME(sleepTime);
-		dispatchs = Maps.newConcurrentMap();
+		dispatchs = new ConcurrentHashMap<String, IDispatch>();
 		executorService = new ScheduledThreadPoolExecutor(corePoolSize);
 	}
 
@@ -53,8 +54,9 @@ public class DispatchManager implements IDispatchManager {
 		IDispatch dispatch = dispatchs.get(key);
 		if (dispatch == null) {
 			Dispatch dis = new Dispatch(handler);
-			executorService.scheduleWithFixedDelay(dis, sleepTime, sleepTime, TimeUnit.MILLISECONDS);
+			serviceList.add(dis);
 			dispatchs.put(key, dis);
+			dis.start();
 			return dis;
 		} else {
 			return dispatch;

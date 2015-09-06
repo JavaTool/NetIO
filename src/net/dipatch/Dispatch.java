@@ -2,15 +2,18 @@ package net.dipatch;
 
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.TimeUnit;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.google.common.util.concurrent.AbstractScheduledService;
 
 /**
  * 默认的消息分配器
  * @author 	fuhuiyuan
  */
-public class Dispatch implements IDispatch, Runnable {
+public class Dispatch extends AbstractScheduledService implements IDispatch {
 	
 	protected static final Logger log = LoggerFactory.getLogger(Dispatch.class);
 	/**休眠时间*/
@@ -23,15 +26,6 @@ public class Dispatch implements IDispatch, Runnable {
 	public Dispatch(IContentHandler handler) {
 		this.handler = handler;
 		contents = new ConcurrentLinkedQueue<IContent>();
-	}
-	
-	@Override
-	public void run() {
-		try {
-			work();
-		} catch (Exception e) {
-			log.error("", e);
-		}
 	}
 	
 	/**
@@ -78,6 +72,16 @@ public class Dispatch implements IDispatch, Runnable {
 	 */
 	public static void setSLEEP_TIME(int sLEEP_TIME) {
 		SLEEP_TIME = sLEEP_TIME;
+	}
+
+	@Override
+	protected void runOneIteration() throws Exception {
+		work();
+	}
+
+	@Override
+	protected Scheduler scheduler() {
+		return Scheduler.newFixedDelaySchedule(getSLEEP_TIME(), getSLEEP_TIME(), TimeUnit.MILLISECONDS);
 	}
 
 }
