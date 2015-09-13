@@ -9,6 +9,9 @@ import io.netty.handler.codec.http.HttpHeaders;
 import io.netty.handler.codec.http.HttpRequest;
 import io.netty.util.Attribute;
 import io.netty.util.AttributeKey;
+
+import java.text.MessageFormat;
+
 import net.dipatch.Content;
 import net.dipatch.IContent;
 import net.dipatch.IDispatchManager;
@@ -23,6 +26,10 @@ public class NettyHttpHandler extends SimpleChannelInboundHandler<Object> {
 	private static final Logger log = LoggerFactory.getLogger(NettyHttpHandler.class);
 	
 	private static final AttributeKey<NettyHttpSession> SESSION = AttributeKey.valueOf("NettyHttpSession");
+	
+	private static final String COOKIE = "Cookie";
+	
+	private static final String COOKIE_FORMT = "eos_style_cookie=default; JSESSIONID={0}; Path=//; HttpOnly";
 	
 	private static final String CONTENT_LENGHT = "Content-Length";
 	
@@ -55,31 +62,42 @@ public class NettyHttpHandler extends SimpleChannelInboundHandler<Object> {
 	
 	private void readHead(Channel channel, HttpRequest req) {
 		HttpHeaders headers = req.headers();
+//		System.out.println("=======================================");
+//		for (Entry<String, String> entry : headers.entries()) {
+//			System.out.println(entry.getKey() + " : " + entry.getValue());
+//		}
+//		System.out.println("=======================================");
+		
+		String cookie = headers.get(COOKIE);
+		if (cookie != null) {
+			cookie = cookie.replaceFirst("JSESSIONID", "jsessionid");
+		}
 		Attribute<NettyHttpSession> session = channel.attr(SESSION);
-		NettyHttpSession httpSession = session.get() ;
+		NettyHttpSession httpSession = session.get();
 		if (httpSession == null) {
-			httpSession = new NettyHttpSession(channel.id().asLongText(), HttpHeaders.isKeepAlive(req), channel);
+			httpSession = new NettyHttpSession(cookie == null || cookie.length() == 0 ? MessageFormat.format(COOKIE_FORMT, channel.id().asLongText()) : cookie, HttpHeaders.isKeepAlive(req), channel);
 			session.set(httpSession);
 		}
 		httpSession.setMessageId(Integer.parseInt(headers.get(MESSAGE_ID)));
-		httpSession.setContentLength(Integer.parseInt(headers.get(CONTENT_LENGHT)));
+		String contentLenght = headers.get(CONTENT_LENGHT);
+		httpSession.setContentLength(contentLenght == null || contentLenght.length() == 0 ? 0 : Integer.parseInt(contentLenght));
 	}
 	
 	private void readContent(Channel channel, NettyHttpSession httpSession, ByteBuf buf) {
 		IContent content = nettyContentFactory.createContent(channel, buf, httpSession);
-//		log.debug("sessionId : {}", content.getSessionId());
+//		log.info("addDispatch IP : {} sessionId : {}", channel.remoteAddress(), content.getSessionId());
 		dispatchManager.addDispatch(content);
 	}
 
 	@Override
 	public void channelInactive(ChannelHandlerContext ctx) throws Exception {
 		Channel channel = ctx.channel();
-		log.info("[Coming Out]IP:{}", channel.remoteAddress());
+		log.info("[Http Coming Out]IP:{}", channel.remoteAddress());
 		Attribute<NettyHttpSession> session = channel.attr(SESSION);
 		NettyHttpSession httpSession = session.get();
 		if (httpSession != null) {
 			String sessionId = httpSession.getId();
-			dispatchManager.disconnect(new Content(sessionId, 0, null, null, new NettyHttpSender(false, sessionId, channel)));
+			dispatchManager.disconnect(new Content(sessionId, 0, null, null, new NettyHttpSender(true, sessionId, channel)));
 		}
 		channel.close();
 		ctx.close();
@@ -87,7 +105,7 @@ public class NettyHttpHandler extends SimpleChannelInboundHandler<Object> {
 
 	@Override
 	public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-		log.info("[Coming Error]IP:{} ; Error:{}", ctx.channel().remoteAddress(), cause.getLocalizedMessage());
+		log.info("[Http Coming Error]IP:{} ; Error:{}", ctx.channel().remoteAddress(), cause.getLocalizedMessage());
 		ctx.channel().close();
 		ctx.close();
 		if (!cause.getLocalizedMessage().contains("远程主机强迫关闭了一个现有的连接。")) {
@@ -108,6 +126,7 @@ public class NettyHttpHandler extends SimpleChannelInboundHandler<Object> {
 		private final ISender sender;
 		
 		public NettyHttpSession(String id, boolean isKeepAlive, Channel channel) {
+			id = id.replace(" ", "");
 			this.id = id;
 			this.isKeepAlive = isKeepAlive;
 			sender = new NettyHttpSender(isKeepAlive, id, channel);

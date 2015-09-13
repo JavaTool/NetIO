@@ -14,6 +14,7 @@ import io.netty.handler.codec.http.HttpServerCodec;
 import io.netty.handler.timeout.IdleStateHandler;
 
 import java.net.InetSocketAddress;
+import java.util.concurrent.TimeUnit;
 
 import net.dipatch.IDispatchManager;
 import net.io.netty.INettyContentFactory;
@@ -55,13 +56,13 @@ public class NettyHttpServer implements Runnable {
 		try {
 			serverBootstrap = new ServerBootstrap();
 			serverBootstrap.group(bossGroup, workerGroup).channel(NioServerSocketChannel.class).option(ChannelOption.SO_BACKLOG, 10240).option(ChannelOption.TCP_NODELAY, true)
-			.option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 10000).option(ChannelOption.SO_REUSEADDR, true).option(ChannelOption.SO_KEEPALIVE, true)
+			.option(ChannelOption.SO_REUSEADDR, true).option(ChannelOption.SO_KEEPALIVE, true)
 			.option(ChannelOption.SO_LINGER, 0).childHandler(new ChannelInitializer<SocketChannel>() {
 				
 				 @Override 
 			 	 protected void initChannel(SocketChannel ch) throws Exception {
 					 ChannelPipeline p = ch.pipeline();
-					 p.addLast("idleStateHandler", new IdleStateHandler(60, 60, 30)); // 读信道空闲60s,写信道空闲60s,读，写信道空闲30s
+					 p.addLast("idleStateHandler", new IdleStateHandler(600, 600, 300, TimeUnit.SECONDS)); // 读信道空闲600s,写信道空闲600s,读，写信道空闲300s
 					 p.addLast("http_server_codec", new HttpServerCodec()); // http消息转换
 			         p.addLast("http_server_handler", createChannelHandler()); // 消息处理器 
 				 }

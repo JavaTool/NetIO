@@ -14,14 +14,11 @@ import io.netty.handler.codec.rtsp.RtspHeaders.Values;
 import io.netty.util.Attribute;
 import io.netty.util.AttributeKey;
 
-import java.text.MessageFormat;
 import java.util.Set;
 
 import net.dipatch.ISender;
 
 public class NettyHttpSender implements ISender {
-	
-	private static final String COOKIE = "eos_style_cookie=default; JSESSIONID={0}; Path=//; HttpOnly";
 	
 	private final String sessionId;
 	
@@ -39,7 +36,7 @@ public class NettyHttpSender implements ISender {
 	public void send(byte[] datas, String messageId) throws Exception {
 		FullHttpResponse response = createResponse(datas);
 		setCookie(response);
-		setContent(response);
+		setContent(response, messageId);
 		channel.writeAndFlush(response);
 	}
 	
@@ -48,15 +45,16 @@ public class NettyHttpSender implements ISender {
 	}
 	
 	protected void setCookie(FullHttpResponse response) {
-		Set<Cookie> cookies = CookieDecoder.decode(MessageFormat.format(COOKIE, sessionId));
+//		Set<Cookie> cookies = CookieDecoder.decode(MessageFormat.format(COOKIE, sessionId));
+		Set<Cookie> cookies = CookieDecoder.decode(sessionId);
 		HttpHeaders headers = response.headers();
 		for (Cookie cookie : cookies) {
 			headers.add(HttpHeaders.Names.SET_COOKIE, ServerCookieEncoder.encode(cookie));
 		}
 	}
 	
-	protected void setContent(FullHttpResponse response) {
-		response.headers().set(HttpHeaders.Names.CONTENT_TYPE, "text/plain");
+	protected void setContent(FullHttpResponse response, String messageId) {
+		response.headers().set(HttpHeaders.Names.CONTENT_TYPE, "text/plain; charset=UTF-8; " + "MessageId".toLowerCase() + "=" + messageId);
         response.headers().set(HttpHeaders.Names.CONTENT_LENGTH, response.content().readableBytes());
         if (isKeepAlive) {
             response.headers().set(HttpHeaders.Names.CONNECTION, Values.KEEP_ALIVE);
