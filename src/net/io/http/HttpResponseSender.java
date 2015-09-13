@@ -13,6 +13,7 @@ import net.dipatch.ISender;
  */
 public class HttpResponseSender implements ISender {
 	
+	private static final String CLOSE_EXCEPTION = "Closed";
 	/**响应*/
 	private final ServletResponse response;
 	/**Http会话*/
@@ -27,8 +28,14 @@ public class HttpResponseSender implements ISender {
 	public void send(byte[] datas, String messageId) throws Exception {
 		OutputStream os = response.getOutputStream();
 		try {
-			response.setContentType("text/plain; charset=UTF-8; MessageId=" + messageId);
+			response.setContentType("text/plain; charset=UTF-8; " + "MessageId".toLowerCase() + "=" + messageId);
 			os.write(datas);
+		} catch (Exception e) {
+			if (CLOSE_EXCEPTION.equals(e.getMessage())) {
+				// unprocess close exception
+			} else {
+				throw e;
+			}
 		} finally {
 			os.flush();
 			os.close();

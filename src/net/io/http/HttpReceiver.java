@@ -49,7 +49,7 @@ public abstract class HttpReceiver extends HttpServlet implements HttpStatus {
 		
 		ISender sender = new HttpResponseSender(response, session);
 		try {
-			log.info("Session id is {}.", session.getId());
+			log.info("Session id is {} : {}.", session.getId(), ip);
 			int messageId = Integer.parseInt(req.getHeader("MessageId"));
 			byte[] decrypt = HttpConnectUtil.getRequestProtoContent(req);
 			
