@@ -11,6 +11,7 @@ import io.netty.util.Attribute;
 import io.netty.util.AttributeKey;
 
 import java.text.MessageFormat;
+import java.util.UUID;
 
 import net.dipatch.Content;
 import net.dipatch.IContent;
@@ -62,12 +63,6 @@ public class NettyHttpHandler extends SimpleChannelInboundHandler<Object> {
 	
 	private void readHead(Channel channel, HttpRequest req) {
 		HttpHeaders headers = req.headers();
-//		System.out.println("=======================================");
-//		for (Entry<String, String> entry : headers.entries()) {
-//			System.out.println(entry.getKey() + " : " + entry.getValue());
-//		}
-//		System.out.println("=======================================");
-		
 		String cookie = headers.get(COOKIE);
 		if (cookie != null) {
 			cookie = cookie.replaceFirst("JSESSIONID", "jsessionid");
@@ -75,7 +70,8 @@ public class NettyHttpHandler extends SimpleChannelInboundHandler<Object> {
 		Attribute<NettyHttpSession> session = channel.attr(SESSION);
 		NettyHttpSession httpSession = session.get();
 		if (httpSession == null) {
-			httpSession = new NettyHttpSession(cookie == null || cookie.length() == 0 ? MessageFormat.format(COOKIE_FORMT, channel.id().asLongText()) : cookie, HttpHeaders.isKeepAlive(req), channel);
+			String sessionId = cookie == null || cookie.length() == 0 ? MessageFormat.format(COOKIE_FORMT, UUID.randomUUID().toString()) : cookie;
+			httpSession = new NettyHttpSession(sessionId, HttpHeaders.isKeepAlive(req), channel);
 			session.set(httpSession);
 		}
 		httpSession.setMessageId(Integer.parseInt(headers.get(MESSAGE_ID)));
