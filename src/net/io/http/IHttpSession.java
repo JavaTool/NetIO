@@ -1,8 +1,8 @@
-package net.io.netty.server;
+package net.io.http;
 
 import net.dipatch.ISender;
 
-public interface INettyHttpSession {
+public interface IHttpSession {
 	
 	int getContentLength();
 	

@@ -17,7 +17,8 @@ import net.dipatch.Content;
 import net.dipatch.IContent;
 import net.dipatch.IDispatchManager;
 import net.dipatch.ISender;
-import net.io.netty.INettyContentFactory;
+import net.io.IContentFactory;
+import net.io.http.IHttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,9 +39,9 @@ public class NettyHttpHandler extends SimpleChannelInboundHandler<Object> {
 	
 	private final IDispatchManager dispatchManager;
 	
-	private final INettyContentFactory nettyContentFactory;
+	private final IContentFactory nettyContentFactory;
 	
-	public NettyHttpHandler(IDispatchManager dispatchManager, INettyContentFactory nettyContentFactory) {
+	public NettyHttpHandler(IDispatchManager dispatchManager, IContentFactory nettyContentFactory) {
 		this.dispatchManager = dispatchManager;
 		this.nettyContentFactory = nettyContentFactory;
 	}
@@ -80,7 +81,9 @@ public class NettyHttpHandler extends SimpleChannelInboundHandler<Object> {
 	}
 	
 	private void readContent(Channel channel, NettyHttpSession httpSession, ByteBuf buf) {
-		IContent content = nettyContentFactory.createContent(channel, buf, httpSession);
+	    byte[] data = new byte[buf.readableBytes()];
+	    buf.readBytes(data);
+		IContent content = nettyContentFactory.createContent(data, httpSession);
 //		log.info("addDispatch IP : {} sessionId : {}", channel.remoteAddress(), content.getSessionId());
 		dispatchManager.addDispatch(content);
 	}
@@ -93,7 +96,7 @@ public class NettyHttpHandler extends SimpleChannelInboundHandler<Object> {
 		NettyHttpSession httpSession = session.get();
 		if (httpSession != null) {
 			String sessionId = httpSession.getId();
-			dispatchManager.disconnect(new Content(sessionId, 0, null, null, new NettyHttpSender(true, sessionId, channel)));
+			dispatchManager.disconnect(new Content(sessionId, 0, null, new NettyHttpSender(true, sessionId, channel)));
 		}
 		channel.close();
 		ctx.close();
@@ -109,7 +112,7 @@ public class NettyHttpHandler extends SimpleChannelInboundHandler<Object> {
 		}
 	}
 	
-	private static class NettyHttpSession implements INettyHttpSession {
+	private static class NettyHttpSession implements IHttpSession {
 		
 		private int contentLength;
 		

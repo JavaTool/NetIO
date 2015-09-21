@@ -8,7 +8,7 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 import net.dipatch.IContentHandler;
-import net.io.netty.INettyContentFactory;
+import net.io.IContentFactory;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,11 +25,11 @@ public class NettyTcpServer implements Runnable {
 	/**消息接收器*/
 	private final IContentHandler contentHandler;
 	
-	private final INettyContentFactory contentFactory;
+	private final IContentFactory contentFactory;
 	
 	private ServerBootstrap serverBootstrap;
 
-	public NettyTcpServer(int port, IContentHandler contentHandler, INettyContentFactory contentFactory) {
+	public NettyTcpServer(int port, IContentHandler contentHandler, IContentFactory contentFactory) {
 		this.port = port;
 		this.contentHandler = contentHandler;
 		this.contentFactory = contentFactory;

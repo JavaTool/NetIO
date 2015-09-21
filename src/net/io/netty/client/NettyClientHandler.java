@@ -7,6 +7,7 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import net.dipatch.IContent;
 import net.dipatch.IContentHandler;
+import net.io.IContentFactory;
 import net.io.netty.server.NettyTcpSender;
 
 @Sharable
@@ -14,9 +15,9 @@ public class NettyClientHandler extends ChannelInboundHandlerAdapter {
 	
 	private final IContentHandler contentHandler;
 	
-	private final NettyClientContentFactory contentFactory;
+	private final IContentFactory contentFactory;
 
-	public NettyClientHandler(IContentHandler contentHandler, NettyClientContentFactory contentFactory) {
+	public NettyClientHandler(IContentHandler contentHandler, IContentFactory contentFactory) {
 		this.contentHandler = contentHandler;
 		this.contentFactory = contentFactory;
 	}
@@ -25,7 +26,9 @@ public class NettyClientHandler extends ChannelInboundHandlerAdapter {
 	public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {  
 	    ByteBuf buf = (ByteBuf) msg;
 	    Channel channel = ctx.channel();
-	    IContent content = contentFactory.createContent(channel, buf, new NettyTcpSender(channel));
+	    byte[] data = new byte[buf.readableBytes()];
+	    buf.readBytes(data);
+	    IContent content = contentFactory.createContent(data, new NettyTcpSender(channel));
 	    contentHandler.handle(content);
 	}
 	  

@@ -9,7 +9,7 @@ import io.netty.util.AttributeKey;
 import net.dipatch.IContent;
 import net.dipatch.IContentHandler;
 import net.dipatch.ISender;
-import net.io.netty.INettyContentFactory;
+import net.io.IContentFactory;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,9 +26,9 @@ public class NettyTcpHandler extends SimpleChannelInboundHandler<ByteBuf> {
 	/**消息处理器*/
 	private final IContentHandler contentHandler;
 	/**消息工厂*/
-	private final INettyContentFactory contentFactory;
+	private final IContentFactory contentFactory;
 	
-	public NettyTcpHandler(IContentHandler contentHandler, INettyContentFactory contentFactory) {
+	public NettyTcpHandler(IContentHandler contentHandler, IContentFactory contentFactory) {
 		this.contentHandler = contentHandler;
 		this.contentFactory = contentFactory;
 	}
@@ -61,8 +61,10 @@ public class NettyTcpHandler extends SimpleChannelInboundHandler<ByteBuf> {
 			sender = new NettyTcpSender(channel);
 			attribute.set(sender);
 		}
-		
-		IContent content = contentFactory.createContent(channel, msg, sender);
+
+	    byte[] data = new byte[msg.readableBytes()];
+	    msg.readBytes(data);
+		IContent content = contentFactory.createContent(data, sender);
 		if (content != null) {
 			contentHandler.handle(content);
 		}

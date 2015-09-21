@@ -17,7 +17,7 @@ import java.net.InetSocketAddress;
 import java.util.concurrent.TimeUnit;
 
 import net.dipatch.IDispatchManager;
-import net.io.netty.INettyContentFactory;
+import net.io.IContentFactory;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,7 +28,7 @@ public class NettyHttpServer implements Runnable {
 	
 	private final IDispatchManager dispatchManager;
 	
-	private final INettyContentFactory nettyContentFactory;
+	private final IContentFactory nettyContentFactory;
 	
 	private final int parentThreadNum;
 	
@@ -40,7 +40,7 @@ public class NettyHttpServer implements Runnable {
 	
 	private ServerBootstrap serverBootstrap;
 	
-	public NettyHttpServer(IDispatchManager dispatchManager, INettyContentFactory nettyContentFactory, int parentThreadNum, int childThreadNum, int port, String ip) {
+	public NettyHttpServer(IDispatchManager dispatchManager, IContentFactory nettyContentFactory, int parentThreadNum, int childThreadNum, int port, String ip) {
 		this.dispatchManager = dispatchManager;
 		this.nettyContentFactory = nettyContentFactory;
 		this.parentThreadNum = parentThreadNum;

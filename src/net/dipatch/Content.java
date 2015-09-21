@@ -10,17 +10,14 @@ public class Content implements IContent {
 	private final String sessionId;
 	/**消息id*/
 	private final int messageId;
-	/**地址*/
-	private final String ip;
 	/**数据*/
 	private final byte[] datas;
 	/**发送器*/
 	private final ISender sender;
 	
-	public Content(String sessionId, int messageId, String ip, byte[] datas, ISender sender) {
+	public Content(String sessionId, int messageId, byte[] datas, ISender sender) {
 		this.sessionId = sessionId;
 		this.messageId = messageId;
-		this.ip = ip;
 		this.datas = datas;
 		this.sender = sender;
 	}
@@ -43,11 +40,6 @@ public class Content implements IContent {
 	@Override
 	public ISender getSender() {
 		return sender;
-	}
-
-	@Override
-	public String getIp() {
-		return ip;
 	}
 
 }

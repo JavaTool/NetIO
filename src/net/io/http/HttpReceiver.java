@@ -47,13 +47,13 @@ public abstract class HttpReceiver extends HttpServlet implements HttpStatus {
 			session.setAttribute(SESSION_IP, ip);
 		}
 		
-		ISender sender = new HttpResponseSender(response, session);
+		ISender sender = new HttpResponseSender(response, session, ip);
 		try {
 			log.info("Session id is {} : {}.", session.getId(), ip);
 			int messageId = Integer.parseInt(req.getHeader("MessageId"));
 			byte[] decrypt = HttpConnectUtil.getRequestProtoContent(req);
 			
-			IContent content = new Content(session.getId(), messageId, ip, decrypt, sender);
+			IContent content = new Content(session.getId(), messageId, decrypt, sender);
 			IContentHandler contentHandler = (IContentHandler) req.getServletContext().getAttribute(IContentHandler.class.getName());
 			contentHandler.handle(content);
 		} catch (Exception e) {

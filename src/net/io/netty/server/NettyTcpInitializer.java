@@ -5,7 +5,7 @@ import io.netty.channel.ChannelPipeline;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
 import net.dipatch.IContentHandler;
-import net.io.netty.INettyContentFactory;
+import net.io.IContentFactory;
 
 /**
  * TCP处理管线
@@ -15,9 +15,9 @@ public class NettyTcpInitializer extends ChannelInitializer<SocketChannel> {
 	
 	private final IContentHandler contentHandler;
 	
-	private final INettyContentFactory contentFactory;
+	private final IContentFactory contentFactory;
 	
-	public NettyTcpInitializer(IContentHandler contentHandler, INettyContentFactory contentFactory) {
+	public NettyTcpInitializer(IContentHandler contentHandler, IContentFactory contentFactory) {
 		this.contentHandler = contentHandler;
 		this.contentFactory = contentFactory;
 	}

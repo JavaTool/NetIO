@@ -19,9 +19,12 @@ public class HttpResponseSender implements ISender {
 	/**Http会话*/
 	private final HttpSession session;
 	
-	public HttpResponseSender(ServletResponse response, HttpSession session) {
+	private final String ip;
+	
+	public HttpResponseSender(ServletResponse response, HttpSession session, String ip) {
 		this.response = response;
 		this.session = session;
+		this.ip = ip;
 	}
 
 	@Override
@@ -51,6 +54,11 @@ public class HttpResponseSender implements ISender {
 	@Override
 	public <X> X getAttribute(String key, Class<X> clz) {
 		return (X) session.getAttribute(key);
+	}
+
+	@Override
+	public String getIp() {
+		return ip;
 	}
 
 }

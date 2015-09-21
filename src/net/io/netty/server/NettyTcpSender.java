@@ -45,4 +45,9 @@ public class NettyTcpSender implements ISender {
 		return attribute == null ? null : attribute.get();
 	}
 
+	@Override
+	public String getIp() {
+		return channel.remoteAddress().toString();
+	}
+
 }

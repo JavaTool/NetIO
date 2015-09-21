@@ -17,11 +17,6 @@ public interface IContent {
 	 */
 	int getMessageId();
 	/**
-	 * 获取地址
-	 * @return	地址
-	 */
-	String getIp();
-	/**
 	 * 获取消息数据
 	 * @return	消息数据
 	 */
