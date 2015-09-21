@@ -1,22 +1,15 @@
 package net.io.netty.server;
 
 import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.util.Attribute;
 import io.netty.util.AttributeKey;
-
-import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
-
 import net.dipatch.IContent;
 import net.dipatch.IContentHandler;
 import net.dipatch.ISender;
 import net.io.netty.INettyContentFactory;
-import net.io.netty.Packet;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -72,33 +65,6 @@ public class NettyTcpHandler extends SimpleChannelInboundHandler<ByteBuf> {
 		IContent content = contentFactory.createContent(channel, msg, sender);
 		if (content != null) {
 			contentHandler.handle(content);
-		}
-	}
-
-	/**
-	 * 发送二进制数据
-	 * @param 	channel
-	 * 			数据
-	 * @param 	message
-	 * 			数据
-	 * @return	
-	 * @throws 	IOException
-	 */
-	public static ByteBuf sendPacket(Channel channel, Packet packet) throws IOException {
-		if (channel != null) {
-			ByteArrayOutputStream bout = new ByteArrayOutputStream();
-			DataOutputStream dos = new DataOutputStream(bout);
-			dos.writeInt(packet.getMessageId());
-			byte[] value = packet.getValue();
-			dos.writeInt(value.length);
-//			dos.write(EncryptUtil.encrypt(resultMessage, resultMessage.length, EncryptUtil.PASSWORD));
-			dos.write(value);
-			byte[] bytes = bout.toByteArray();
-			ByteBuf result = Unpooled.copiedBuffer(bytes);
-			channel.writeAndFlush(result);
-			return result;
-		} else {
-			return null;
 		}
 	}
 
