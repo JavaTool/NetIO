@@ -1,4 +1,4 @@
-package net.io.netty.client;
+package net.io;
 
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
@@ -7,17 +7,16 @@ import java.io.IOException;
 import net.dipatch.Content;
 import net.dipatch.IContent;
 import net.dipatch.ISender;
-import net.io.IContentFactory;
 import net.io.http.IHttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class NettyClientContentFactory implements IContentFactory {
+public class SimpleContentFactory implements IContentFactory {
 	
 	protected static final String SESSION_ID = "SESSION_ID";
 	
-	protected static final Logger log = LoggerFactory.getLogger(NettyClientContentFactory.class);
+	protected static final Logger log = LoggerFactory.getLogger(SimpleContentFactory.class);
 
 	@Override
 	public IContent createContent(byte[] data, IHttpSession httpSession) {

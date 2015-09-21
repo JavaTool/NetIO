@@ -12,6 +12,7 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import net.dipatch.IContentHandler;
+import net.io.SimpleContentFactory;
 
 public class NettyClient {
 	
@@ -23,7 +24,7 @@ public class NettyClient {
 	
 	protected Channel socketChannel;
 	
-	public NettyClient(final IContentHandler contentHandler, final NettyClientContentFactory contentFactory, int port, String host) throws Exception {
+	public NettyClient(final IContentHandler contentHandler, final SimpleContentFactory contentFactory, int port, String host) throws Exception {
 		group = new NioEventLoopGroup();
 		bootstrap = new Bootstrap();
 		nettyClientHandler = new NettyClientHandler(contentHandler, contentFactory);
