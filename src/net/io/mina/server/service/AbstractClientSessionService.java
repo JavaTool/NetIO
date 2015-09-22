@@ -46,7 +46,8 @@ public abstract class AbstractClientSessionService implements ClientSessionServi
 		this.sessionManager = sessionManager;
 	}
 
-	public void close() {
+	@Override
+	public void shutdown() {
 		if (acceptor != null) {
 			acceptor.unbindAll();
 		}

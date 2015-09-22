@@ -24,35 +24,26 @@ import org.apache.mina.common.IoHandlerAdapter;
 import org.apache.mina.transport.socket.nio.SocketAcceptor;
 import org.apache.mina.transport.socket.nio.SocketAcceptorConfig;
 
-/**
- * ������������ӷ���
- * @author 	lighthu
- */
 public abstract class AdminDispatchClientSessionService extends AbstractClientSessionService implements Runnable {
 	
 	public static final String SESSION_COUNTER = "SessionCounter";
 
 	protected static final String SESSION_ID = "SESSION_ID";
 	
-	/**
-	 * �����û��Ự��id�ĸ�32λ�Ǵ���ID����32λ�ǻỰID
-	 */
 	protected Map<Long, AdminDispatchClientSession> sessions = new ConcurrentHashMap<Long, AdminDispatchClientSession>();
-	/**
-	 * ����ID�����
-	 */
+	
 	protected SyncInteger ids = new SyncInteger(0);
-	// �����������ַ
+	
 	protected String proxyIP = "221.179.216.53";
-	// ����������˿�
+	
 	protected int proxyPort = 7001;
-	// �������������
+	
 	protected String proxyPassword = "proxy@pip2008";
-	// ��¼��������
+	
 	protected int connectionCount = 0;
-	// ��ʱ֪ͨproxy���߳�
+	
 	protected Thread notifyProxyThread;
-	// �Ƿ���ֹͣ
+	
 	protected boolean stopped = false;
 
 	public AdminDispatchClientSessionService(Configuration config, PacketHandler handler, SessionManager sessionManager) {
@@ -69,6 +60,7 @@ public abstract class AdminDispatchClientSessionService extends AbstractClientSe
 		super(address, port, handler, sessionManager);
 	}
 	
+	@Override
 	public void run() {
 		while (!stopped) {
 			try {
@@ -85,7 +77,6 @@ public abstract class AdminDispatchClientSessionService extends AbstractClientSe
 	}
 	
 	protected void notifyProxy() throws IOException {
-		// ��UDP��������������ע���
 		InetAddress addr = InetAddress.getByName(proxyIP);
     	String cmd = proxyPassword + ":addserver:" + address + ":" + port + ":3";
     	byte[] sendData = cmd.getBytes();
@@ -94,7 +85,6 @@ public abstract class AdminDispatchClientSessionService extends AbstractClientSe
     	localSocket.send(dpack);
     	localSocket.close();
     	
-    	// ͨ��TCP�ٷ���һ�Σ�ȷ��ע��
 		Socket socket = null;
 		InputStream is = null;
 		OutputStream os = null;
@@ -109,28 +99,33 @@ public abstract class AdminDispatchClientSessionService extends AbstractClientSe
     		byte[] buf = new byte[2];
     		new DataInputStream(is).read(buf);
     	} catch (Exception e) {
+    		
     	} finally {
     		if (is != null) {
     			try {
     				is.close();
     			} catch (Exception e) {
+    				
     			}
     		}
     		if (os != null) {
     			try {
     				os.close();
     			} catch (Exception e) {
+    				
     			}
     		}
     		if (socket != null) {
     			try {
     				socket.close();
     			} catch (Exception e) {
+    				
     			}
     		}
     	}
 	}
 
+	@Override
 	public void bind() throws IOException {
 		acceptor = new SocketAcceptor();
 		SocketAcceptorConfig cfg = new SocketAcceptorConfig();
@@ -143,9 +138,9 @@ public abstract class AdminDispatchClientSessionService extends AbstractClientSe
 	}
 
 	@Override
-	public void close() {
+	public void shutdown() {
 		sessions.clear();
-		super.close();
+		super.shutdown();
 		stopped = true;
 		if (notifyProxyThread != null) {
 			try {

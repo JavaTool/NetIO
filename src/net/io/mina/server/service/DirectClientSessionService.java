@@ -33,7 +33,8 @@ public class DirectClientSessionService extends AbstractClientSessionService {
 //		bind();
 //	}
 
-	protected void bind() throws IOException{
+	@Override
+	public void bind() throws IOException{
 		acceptor = new SocketAcceptor();
 		SocketAcceptorConfig cfg = new SocketAcceptorConfig();
 //      cfg.getFilterChain().addLast( "codec", new ProtocolCodecFilter(MinaUAEncoder.class, MinaUADecoder.class));

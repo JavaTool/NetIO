@@ -18,11 +18,12 @@ import java.util.concurrent.TimeUnit;
 
 import net.dipatch.IDispatchManager;
 import net.io.IContentFactory;
+import net.io.INetServer;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class NettyHttpServer implements Runnable {
+public class NettyHttpServer implements INetServer, Runnable {
 	
 	private final Logger log;
 	
@@ -50,7 +51,8 @@ public class NettyHttpServer implements Runnable {
 		log = LoggerFactory.getLogger(NettyHttpServer.class);
 	}
 
-	public void bootStrap() throws Exception {
+	@Override
+	public void bind() throws Exception {
 		EventLoopGroup bossGroup = new NioEventLoopGroup(parentThreadNum);
 		EventLoopGroup workerGroup = new NioEventLoopGroup(childThreadNum);
 		try {
@@ -85,12 +87,13 @@ public class NettyHttpServer implements Runnable {
 	@Override
 	public void run() {
 		try {
-			bootStrap();
+			bind();
 		} catch (Exception e) {
 			log.error("[HTTP StartUp Error]", e);
 		}
 	}
 
+	@Override
 	public void shutdown() {
 		// Shut down all event loops to terminate all threads.
 		log.info("Shut down all event loops to terminate all threads.");

@@ -9,6 +9,7 @@ import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 import net.dipatch.IContentHandler;
 import net.io.IContentFactory;
+import net.io.INetServer;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,7 +18,7 @@ import org.slf4j.LoggerFactory;
  * TCP协议接收器
  * @author 	fuhuiyuan
  */
-public class NettyTcpServer implements Runnable {
+public class NettyTcpServer implements INetServer, Runnable {
 	
 	private final Logger log;
 	/**端口*/
@@ -36,10 +37,8 @@ public class NettyTcpServer implements Runnable {
 		log = LoggerFactory.getLogger(NettyTcpServer.class);
 	}
 
-	/**
-	 * TCP服务器启动函数
-	 */
-	private void bootStrap() throws Exception {
+	@Override
+	public void bind() throws Exception {
 		EventLoopGroup bossGroup = new NioEventLoopGroup();
 		EventLoopGroup workerGroup = new NioEventLoopGroup();
 		try {
@@ -58,7 +57,7 @@ public class NettyTcpServer implements Runnable {
 	@Override
 	public void run() {
 		try {
-			bootStrap();
+			bind();
 		} catch (Exception e) {
 			log.error("[TCP StartUp Error]", e);
 		}

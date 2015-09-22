@@ -1,9 +1,10 @@
 package net.io.mina.server.service;
 
+import net.io.INetServer;
 import net.io.mina.server.IOLog;
 import net.io.mina.server.session.ClientSession;
 
-public interface ClientSessionService {
+public interface ClientSessionService extends INetServer {
 	
 	void addClientSession(ClientSession session);
 	

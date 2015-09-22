@@ -20,7 +20,9 @@ public class SimpleContentFactory implements IContentFactory {
 
 	@Override
 	public IContent createContent(byte[] data, IHttpSession httpSession) {
-		return createContent(data, httpSession.getSender());
+		String sessionId = httpSession.getId();
+		int messageId = httpSession.getMessageId();
+		return new Content(sessionId, messageId, data, httpSession.getSender());
 	}
 
 	@Override

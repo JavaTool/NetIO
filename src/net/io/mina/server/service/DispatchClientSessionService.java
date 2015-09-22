@@ -17,23 +17,14 @@ import org.apache.mina.common.IoHandlerAdapter;
 import org.apache.mina.transport.socket.nio.SocketAcceptor;
 import org.apache.mina.transport.socket.nio.SocketAcceptorConfig;
 
-/**
- * ������������ӷ���
- * @author 	lighthu
- */
 public abstract class DispatchClientSessionService extends AbstractClientSessionService {
 	
 	public static final String SESSION_COUNTER = "SessionCounter";
 
 	protected static final String SESSION_ID = "SESSION_ID";
 	
-	/**
-	 * �����û��Ự��id�ĸ�32λ�Ǵ���ID����32λ�ǻỰID
-	 */
 	protected Map<Long, DispatchClientSession> sessions = new ConcurrentHashMap<Long, DispatchClientSession>();
-	/**
-	 * ����ID�����
-	 */
+	
 	protected SyncInteger ids = new SyncInteger(0);
 
 	public DispatchClientSessionService(Configuration config, PacketHandler handler, SessionManager sessionManager) {
@@ -44,6 +35,7 @@ public abstract class DispatchClientSessionService extends AbstractClientSession
 		super(address, port, handler, sessionManager);
 	}
 
+	@Override
 	public void bind() throws IOException {
 		acceptor = new SocketAcceptor();
 		SocketAcceptorConfig cfg = new SocketAcceptorConfig();
@@ -53,9 +45,9 @@ public abstract class DispatchClientSessionService extends AbstractClientSession
 	}
 
 	@Override
-	public void close() {
+	public void shutdown() {
 		sessions.clear();
-		super.close();
+		super.shutdown();
 	}
 
 	@Override
