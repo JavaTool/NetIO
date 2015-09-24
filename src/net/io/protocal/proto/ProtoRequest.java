@@ -3,6 +3,7 @@ package net.io.protocal.proto;
 import java.io.BufferedInputStream;
 import java.io.InputStream;
 
+import net.dipatch.ISender;
 import net.io.Request;
 
 final class ProtoRequest implements Request {
@@ -10,22 +11,26 @@ final class ProtoRequest implements Request {
 	/**最大数据读取次数*/
 	protected static final int CONTENT_MAX_READ_TIMES = 5;
 	
-	/**客户端地址*/
-	protected final String ip;
 	/**请求信息的id*/
 	protected final int receiveMessageId;
 	
 	protected final byte[] datas;
+	/**数据发送器*/
+	protected final ISender sender;
 	
-	protected ProtoRequest(String ip, int receiveMessageId, byte[] datas) {
-		this.ip = ip;
+	protected final String sessionId;
+	
+	protected ProtoRequest(int receiveMessageId, byte[] datas, ISender sender, String sessionId) {
 		this.receiveMessageId = receiveMessageId;
 		this.datas = datas;
+		this.sender = sender;
+		this.sessionId = sessionId;
 	}
 	
-	protected ProtoRequest(String ip, int receiveMessageId, InputStream is, int contentLength) throws Exception {
-		this.ip = ip;
+	protected ProtoRequest(int receiveMessageId, InputStream is, int contentLength, ISender sender, String sessionId) throws Exception {
 		this.receiveMessageId = receiveMessageId;
+		this.sender = sender;
+		this.sessionId = sessionId;
 		datas = new byte[contentLength];
 		BufferedInputStream bis = new BufferedInputStream(is);
 		int readLength = bis.read(datas, 0, contentLength);
@@ -40,11 +45,6 @@ final class ProtoRequest implements Request {
 	}
 
 	@Override
-	public String getIp() {
-		return ip;
-	}
-
-	@Override
 	public int getReceiveMessageId() {
 		return receiveMessageId;
 	}
@@ -52,6 +52,16 @@ final class ProtoRequest implements Request {
 	@Override
 	public byte[] getByteArray() {
 		return datas;
+	}
+
+	@Override
+	public String getSessionId() {
+		return sessionId;
+	}
+
+	@Override
+	public ISender getSender() {
+		return sender;
 	}
 
 }

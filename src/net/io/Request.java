@@ -1,11 +1,15 @@
 package net.io;
 
+import net.dipatch.ISender;
+
 public interface Request {
-	
-	String getIp();
 	
 	int getReceiveMessageId();
 	
 	byte[] getByteArray();
+	
+	String getSessionId();
+	
+	ISender getSender();
 
 }

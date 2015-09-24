@@ -5,6 +5,7 @@ import java.io.DataInput;
 import java.io.DataInputStream;
 import java.io.InputStream;
 
+import net.dipatch.ISender;
 import net.io.Request;
 
 final class UWapRequest implements Request {
@@ -13,22 +14,26 @@ final class UWapRequest implements Request {
 	
 	protected static final byte[] PROTOCOL = {'D', 'A'};
 	
-	/**客户端地址*/
-	protected final String ip;
 	/**请求信息的id*/
 	protected final int receiveMessageId;
 	
 	protected final byte[] datas;
+	/**数据发送器*/
+	protected final ISender sender;
 	
-	protected UWapRequest(String ip, int receiveMessageId, byte[] datas) {
-		this.ip = ip;
+	protected final String sessionId;
+	
+	protected UWapRequest(int receiveMessageId, byte[] datas, ISender sender, String sessionId) {
 		this.receiveMessageId = receiveMessageId;
 		this.datas = datas;
+		this.sender = sender;
+		this.sessionId = sessionId;
 		read(createStream());
 	}
 	
-	protected UWapRequest(String ip, int receiveMessageId, InputStream is, int contentLength) throws Exception {
-		this.ip = ip;
+	protected UWapRequest(int receiveMessageId, InputStream is, int contentLength, ISender sender, String sessionId) throws Exception {
+		this.sender = sender;
+		this.sessionId = sessionId;
 		DataInput input = new DataInputStream(is);
 		try {
 			byte protocol_0 = input.readByte();
@@ -66,11 +71,6 @@ final class UWapRequest implements Request {
 	protected void read(DataInput di) {}
 
 	@Override
-	public String getIp() {
-		return ip;
-	}
-
-	@Override
 	public int getReceiveMessageId() {
 		return receiveMessageId;
 	}
@@ -78,6 +78,16 @@ final class UWapRequest implements Request {
 	@Override
 	public byte[] getByteArray() {
 		return datas;
+	}
+
+	@Override
+	public String getSessionId() {
+		return sessionId;
+	}
+
+	@Override
+	public ISender getSender() {
+		return sender;
 	}
 
 }
