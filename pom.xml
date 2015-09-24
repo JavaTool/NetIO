@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>net</groupId>
   <artifactId>NetIO</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>0.0.1</version>
   <name>网络输入输出处理包</name>
   <build>
     <sourceDirectory>src</sourceDirectory>
