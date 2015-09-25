@@ -2,7 +2,6 @@ package net.io.mina.server.service;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
-import java.util.HashMap;
 import java.util.Map;
 
 import net.io.mina.Packet;
@@ -17,9 +16,11 @@ import org.apache.mina.common.IoSession;
 import org.apache.mina.transport.socket.nio.SocketAcceptor;
 import org.apache.mina.transport.socket.nio.SocketAcceptorConfig;
 
+import com.google.common.collect.Maps;
+
 public class DirectClientSessionService extends AbstractClientSessionService {
 	
-	protected Map<Integer, DirectClientSession> sessions = new HashMap<Integer, DirectClientSession>();
+	protected Map<Integer, DirectClientSession> sessions = Maps.newHashMap();
 	
 	public DirectClientSessionService(Configuration config, PacketHandler handler, SessionManager sessionManager) {
 		super(config, handler, sessionManager);

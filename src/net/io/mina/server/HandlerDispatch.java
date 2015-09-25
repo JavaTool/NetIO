@@ -1,10 +1,11 @@
 package net.io.mina.server;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import net.io.mina.Packet;
 import net.io.mina.server.session.ClientSession;
+
+import com.google.common.collect.Maps;
 
 public class HandlerDispatch implements PacketHandler {
 	
@@ -27,7 +28,7 @@ public class HandlerDispatch implements PacketHandler {
 	public HandlerDispatch(String id, IOLog log){
 		this.id = id;
 		this.log = log;
-		handlers = new HashMap<Integer, PacketHandler>();
+		handlers = Maps.newHashMap();
 	}
 	
 	public String getId(){
