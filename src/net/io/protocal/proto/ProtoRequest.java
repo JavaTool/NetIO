@@ -6,7 +6,7 @@ import java.io.InputStream;
 import net.dipatch.ISender;
 import net.io.Request;
 
-final class ProtoRequest implements Request {
+public class ProtoRequest implements Request {
 	
 	/**最大数据读取次数*/
 	protected static final int CONTENT_MAX_READ_TIMES = 5;

@@ -12,9 +12,10 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import net.dipatch.IContentHandler;
-import net.io.SimpleContentFactory;
+import net.io.IContentFactory;
+import net.io.INetClient;
 
-public class NettyClient {
+public class NettyClient implements INetClient {
 	
     protected final EventLoopGroup group;
     
@@ -24,7 +25,7 @@ public class NettyClient {
 	
 	protected Channel socketChannel;
 	
-	public NettyClient(final IContentHandler contentHandler, final SimpleContentFactory contentFactory, int port, String host) throws Exception {
+	public NettyClient(final IContentHandler contentHandler, final IContentFactory contentFactory, int port, String host) throws Exception {
 		group = new NioEventLoopGroup();
 		bootstrap = new Bootstrap();
 		nettyClientHandler = new NettyClientHandler(contentHandler, contentFactory);
@@ -41,19 +42,19 @@ public class NettyClient {
     	// 发起异步链接操作
     	ChannelFuture channelFuture = bootstrap.connect(host, port).sync();
     	if (channelFuture.isSuccess()) {
-    		System.out.println("success");
     		socketChannel = channelFuture.channel();
     	}
 	}
 	
+	@Override
 	public void connect(final byte[] data) {
 		ByteBuf clientMessage = Unpooled.buffer(data.length);
 		clientMessage.writeInt(data.length);
 	    clientMessage.writeBytes(data);
     	socketChannel.writeAndFlush(clientMessage);
-    	System.out.println("send");
 	}
-	
+
+	@Override
 	public void close() {
 		group.shutdownGracefully();
 	}
