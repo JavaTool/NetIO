@@ -13,7 +13,7 @@ import net.dipatch.Content;
 import net.dipatch.IContent;
 import net.dipatch.IContentHandler;
 import net.dipatch.ISender;
-import net.io.Response;
+import net.io.IMessage;
 import net.io.util.HttpConnectUtil;
 
 import org.slf4j.Logger;
@@ -76,13 +76,13 @@ public abstract class HttpReceiver extends HttpServlet implements HttpStatus {
 	 */
 	private void error(Exception e, HttpServletResponse response, OutputStream os) throws IOException {
 		log.error("", e);
-		Response errorResponse = createErrorResponse(e);
-		response.setContentType("text/plain; charset=UTF-8; " + HttpConnectUtil.MESSAGEID + "=" + errorResponse.getSendMessageId());
+		IMessage errorResponse = createErrorResponse(e);
+		response.setContentType("text/plain; charset=UTF-8; " + HttpConnectUtil.MESSAGEID + "=" + errorResponse.getMessageId());
 		response.setStatus(HTTP_STATUS_SUCCESS);
 		errorResponse.output(os);
 	}
 	
-	protected abstract Response createErrorResponse(Exception e);
+	protected abstract IMessage createErrorResponse(Exception e);
 	
 	/**
 	 * 获取解析的地址
