@@ -28,7 +28,7 @@ public class HttpResponseSender implements ISender {
 	}
 
 	@Override
-	public void send(byte[] datas, String messageId) throws Exception {
+	public void send(byte[] datas, int messageId) throws Exception {
 		OutputStream os = response.getOutputStream();
 		try {
 			response.setContentType("text/plain; charset=UTF-8; " + "MessageId".toLowerCase() + "=" + messageId);

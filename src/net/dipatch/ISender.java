@@ -12,7 +12,7 @@ public interface ISender {
 	 * 			数据
 	 * @throws 	Exception
 	 */
-	void send(byte[] datas, String messageId) throws Exception;
+	void send(byte[] datas, int messageId) throws Exception;
 	
 	<X, Y extends X> void setAttribute(String key, Class<X> clz, Y value);
 	

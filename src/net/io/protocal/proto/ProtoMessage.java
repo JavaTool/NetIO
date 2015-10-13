@@ -11,6 +11,10 @@ public class ProtoMessage extends BaseMessage {
 		super(messageId, status, sessionId, sender);
 		mergeFrom(datas);
 	}
+	
+	protected ProtoMessage() {
+		super();
+	}
 
 	@Override
 	public byte[] getByteArray() {

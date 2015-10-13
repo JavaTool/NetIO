@@ -20,10 +20,10 @@ public class NettyTcpSender implements ISender {
 	}
 
 	@Override
-	public void send(byte[] datas, String messageId) throws Exception {
+	public void send(byte[] datas, int messageId) throws Exception {
 		ByteArrayOutputStream bout = new ByteArrayOutputStream();
 		DataOutputStream dos = new DataOutputStream(bout);
-		dos.writeUTF(messageId);
+		dos.writeInt(messageId);
 		dos.writeInt(datas.length);
 //		dos.write(EncryptUtil.encrypt(resultMessage, resultMessage.length, EncryptUtil.PASSWORD));
 		dos.write(datas);

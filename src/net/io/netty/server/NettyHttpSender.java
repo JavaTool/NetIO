@@ -33,7 +33,7 @@ public class NettyHttpSender implements ISender {
 	}
 
 	@Override
-	public void send(byte[] datas, String messageId) throws Exception {
+	public void send(byte[] datas, int messageId) throws Exception {
 		FullHttpResponse response = createResponse(datas);
 		setCookie(response);
 		setContent(response, messageId);
@@ -53,7 +53,7 @@ public class NettyHttpSender implements ISender {
 		}
 	}
 	
-	protected void setContent(FullHttpResponse response, String messageId) {
+	protected void setContent(FullHttpResponse response, int messageId) {
 		response.headers().set(HttpHeaders.Names.CONTENT_TYPE, "text/plain; charset=UTF-8; " + "MessageId".toLowerCase() + "=" + messageId);
         response.headers().set(HttpHeaders.Names.CONTENT_LENGTH, response.content().readableBytes());
         if (isKeepAlive) {
