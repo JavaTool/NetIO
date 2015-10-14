@@ -11,16 +11,11 @@ import net.dipatch.IContentHandler;
 import net.io.IContentFactory;
 import net.io.INetServer;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
  * TCP协议接收器
  * @author 	fuhuiyuan
  */
-public class NettyTcpServer implements INetServer, Runnable {
-	
-	private final Logger log;
+public class NettyTcpServer implements INetServer {
 	/**端口*/
 	private final int port;
 	/**消息接收器*/
@@ -34,7 +29,6 @@ public class NettyTcpServer implements INetServer, Runnable {
 		this.port = port;
 		this.contentHandler = contentHandler;
 		this.contentFactory = contentFactory;
-		log = LoggerFactory.getLogger(NettyTcpServer.class);
 	}
 
 	@Override
@@ -46,8 +40,6 @@ public class NettyTcpServer implements INetServer, Runnable {
 			serverBootstrap.group(bossGroup, workerGroup).channel(NioServerSocketChannel.class).option(ChannelOption.SO_BACKLOG, 100).handler(new LoggingHandler(LogLevel.INFO));
 			// 注册TCP处理流水线
 			serverBootstrap.childHandler(new NettyTcpInitializer(contentHandler, contentFactory));
-			// 开始监听
-			log.info("TCP启动成功");
 			serverBootstrap.bind(port).sync().channel().closeFuture().sync();
 		} finally {
 			shutdown();
@@ -55,14 +47,6 @@ public class NettyTcpServer implements INetServer, Runnable {
 	}
 
 	@Override
-	public void run() {
-		try {
-			bind();
-		} catch (Exception e) {
-			log.error("[TCP StartUp Error]", e);
-		}
-	}
-
 	public void shutdown() {
 		serverBootstrap.group().shutdownGracefully();
 		serverBootstrap.childGroup().shutdownGracefully();
