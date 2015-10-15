@@ -9,7 +9,7 @@ public interface INetClient {
 	
 	void close() throws Exception;
 	
-	public static void sendMessage(INetClient connection, IMessage message) throws Exception {
+	public default void sendMessage(IMessage message) throws Exception {
 		ByteArrayOutputStream bout = new ByteArrayOutputStream();
 		DataOutputStream dos = new DataOutputStream(bout);
 		dos.writeInt(message.getMessageId());
@@ -18,7 +18,7 @@ public interface INetClient {
 //		dos.write(EncryptUtil.encrypt(resultMessage, resultMessage.length, EncryptUtil.PASSWORD));
 		dos.write(datas);
 		byte[] bytes = bout.toByteArray();
-		connection.connect(bytes);
+		connect(bytes);
 	}
 
 }
