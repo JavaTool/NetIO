@@ -11,6 +11,8 @@ import net.dipatch.IContentHandler;
 import net.dipatch.ISender;
 import net.io.IContentFactory;
 
+import java.util.UUID;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,6 +23,8 @@ import org.slf4j.LoggerFactory;
 public class NettyTcpHandler extends SimpleChannelInboundHandler<ByteBuf> {
 	
 	protected static final AttributeKey<ISender> SENDER_KEY = AttributeKey.valueOf("SENDER_KEY");
+	
+	protected static final AttributeKey<String> SESSSION_ID_KEY = AttributeKey.valueOf(IContentFactory.SESSION_ID);
 	
 	protected static final Logger log = LoggerFactory.getLogger(NettyTcpHandler.class);
 	/**消息处理器*/
@@ -40,9 +44,14 @@ public class NettyTcpHandler extends SimpleChannelInboundHandler<ByteBuf> {
 
 	@Override
 	public void channelInactive(ChannelHandlerContext ctx) throws Exception {
-		log.info("[Coming Out]IP:{}", ctx.channel().remoteAddress());
+		String address = ctx.channel().remoteAddress().toString();
+		String sessionId = ctx.channel().attr(SESSSION_ID_KEY).get();
+		log.info("[Coming Out]IP:{}", address);
 		ctx.channel().close();
 		ctx.close();
+		if (sessionId != null) {
+			contentHandler.disconnect(sessionId, address);
+		}
 	}
 
 	@Override
@@ -60,6 +69,8 @@ public class NettyTcpHandler extends SimpleChannelInboundHandler<ByteBuf> {
 		if (sender == null) {
 			sender = new NettyTcpSender(channel);
 			attribute.set(sender);
+			Attribute<String> session = channel.attr(SESSSION_ID_KEY);
+			session.set(UUID.randomUUID().toString());
 		}
 
 	    byte[] data = new byte[msg.readableBytes()];

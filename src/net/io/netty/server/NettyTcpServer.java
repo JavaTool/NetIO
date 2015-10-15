@@ -16,6 +16,7 @@ import net.io.INetServer;
  * @author 	fuhuiyuan
  */
 public class NettyTcpServer implements INetServer {
+	
 	/**端口*/
 	private final int port;
 	/**消息接收器*/
@@ -50,6 +51,11 @@ public class NettyTcpServer implements INetServer {
 	public void shutdown() {
 		serverBootstrap.group().shutdownGracefully();
 		serverBootstrap.childGroup().shutdownGracefully();
+	}
+
+	@Override
+	public int getPort() {
+		return port;
 	}
 
 }

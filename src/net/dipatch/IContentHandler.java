@@ -13,5 +13,7 @@ public interface IContentHandler {
 	 * @throws 	Exception
 	 */
 	void handle(IContent content) throws Exception;
+	
+	void disconnect(String sessionId, String address);
 
 }

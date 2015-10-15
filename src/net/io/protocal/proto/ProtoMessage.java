@@ -14,6 +14,7 @@ public class ProtoMessage extends BaseMessage {
 	
 	protected ProtoMessage() {
 		super();
+		mergeFrom(NULL_SEND_DATAS);
 	}
 
 	@Override

@@ -101,4 +101,9 @@ public class NettyHttpServer implements INetServer, Runnable {
 		serverBootstrap.childGroup().shutdownGracefully();
 	}
 
+	@Override
+	public int getPort() {
+		return port;
+	}
+
 }

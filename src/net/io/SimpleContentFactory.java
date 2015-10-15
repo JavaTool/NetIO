@@ -14,8 +14,6 @@ import org.slf4j.LoggerFactory;
 
 public class SimpleContentFactory implements IContentFactory {
 	
-	protected static final String SESSION_ID = "SESSION_ID";
-	
 	protected static final Logger log = LoggerFactory.getLogger(SimpleContentFactory.class);
 
 	@Override
