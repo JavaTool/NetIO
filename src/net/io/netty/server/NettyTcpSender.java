@@ -23,6 +23,7 @@ public class NettyTcpSender implements ISender {
 	public void send(byte[] datas, int messageId) throws Exception {
 		ByteArrayOutputStream bout = new ByteArrayOutputStream();
 		DataOutputStream dos = new DataOutputStream(bout);
+		dos.writeInt(datas.length + 8);
 		dos.writeInt(messageId);
 		dos.writeInt(datas.length);
 //		dos.write(EncryptUtil.encrypt(resultMessage, resultMessage.length, EncryptUtil.PASSWORD));

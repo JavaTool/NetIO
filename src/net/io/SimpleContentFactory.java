@@ -27,17 +27,21 @@ public class SimpleContentFactory implements IContentFactory {
 	public IContent createContent(byte[] data, ISender sender) {
 		DataInputStream dis = new DataInputStream(new ByteArrayInputStream(data));
 		try {
-			int messageId = dis.readInt();
-			int messageLength = dis.readInt();
-			byte[] datas = new byte[messageLength];
-			dis.read(datas);
-			String sessionId = sender.getAttribute(SESSION_ID, String.class);
-			sessionId = sessionId == null ? "" : sessionId;
-			return new Content(sessionId, messageId, datas, sender);
+			return createContent(dis, sender);
 		} catch (IOException e) {
 			log.error("", e);
 			return null;
 		}
+	}
+	
+	protected IContent createContent(DataInputStream dis, ISender sender) throws IOException {
+		int messageId = dis.readInt();
+		int messageLength = dis.readInt();
+		byte[] datas = new byte[messageLength];
+		dis.read(datas);
+		String sessionId = sender.getAttribute(SESSION_ID, String.class);
+		sessionId = sessionId == null ? "" : sessionId;
+		return new Content(sessionId, messageId, datas, sender);
 	}
 
 }

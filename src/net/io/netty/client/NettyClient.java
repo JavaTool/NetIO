@@ -7,10 +7,12 @@ import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
+import io.netty.channel.ChannelPipeline;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
+import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
 import net.dipatch.IContentHandler;
 import net.io.IContentFactory;
 import net.io.INetClient;
@@ -29,13 +31,15 @@ public class NettyClient implements INetClient {
 		group = new NioEventLoopGroup();
 		bootstrap = new Bootstrap();
 		nettyClientHandler = new NettyClientHandler(contentHandler, contentFactory);
-		bootstrap.group(group).channel(NioSocketChannel.class).option(ChannelOption.SO_KEEPALIVE, true);
-		bootstrap.remoteAddress(host, port);
+		bootstrap.group(group).channel(NioSocketChannel.class).option(ChannelOption.SO_KEEPALIVE, true).option(ChannelOption.TCP_NODELAY, true);
+//		bootstrap.remoteAddress(host, port);
 		bootstrap.handler(new ChannelInitializer<SocketChannel>() {
   		  
-	        @Override  
+	        @Override
 	        protected void initChannel(SocketChannel ch) throws Exception {
-	        	ch.pipeline().addLast(nettyClientHandler);
+	        	ChannelPipeline pipeline = ch.pipeline();
+	    		// 粘包处理
+	    		pipeline.addLast(new LengthFieldBasedFrameDecoder(Integer.MAX_VALUE, 0, 4, 0, 4), nettyClientHandler);
 	        }
         
     	});
