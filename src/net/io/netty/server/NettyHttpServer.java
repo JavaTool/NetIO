@@ -10,6 +10,7 @@ import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.handler.codec.http.HttpRequestDecoder;
 import io.netty.handler.codec.http.HttpServerCodec;
 import io.netty.handler.timeout.IdleStateHandler;
 
@@ -65,6 +66,7 @@ public class NettyHttpServer implements INetServer, Runnable {
 			 	 protected void initChannel(SocketChannel ch) throws Exception {
 					 ChannelPipeline p = ch.pipeline();
 					 p.addLast("idleStateHandler", new IdleStateHandler(600, 600, 300, TimeUnit.SECONDS)); // 读信道空闲600s,写信道空闲600s,读，写信道空闲300s
+					 p.addLast("HttpRequestDecoder", new HttpRequestDecoder()); // http消息转换
 					 p.addLast("http_server_codec", new HttpServerCodec()); // http消息转换
 			         p.addLast("http_server_handler", createChannelHandler()); // 消息处理器 
 				 }
