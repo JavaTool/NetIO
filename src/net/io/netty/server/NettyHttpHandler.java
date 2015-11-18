@@ -1,5 +1,11 @@
 package net.io.netty.server;
 
+import java.text.MessageFormat;
+import java.util.UUID;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
@@ -7,21 +13,15 @@ import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.http.HttpContent;
 import io.netty.handler.codec.http.HttpHeaders;
 import io.netty.handler.codec.http.HttpRequest;
+import io.netty.handler.codec.http.LastHttpContent;
 import io.netty.util.Attribute;
 import io.netty.util.AttributeKey;
-
-import java.text.MessageFormat;
-import java.util.UUID;
-
 import net.dipatch.Content;
 import net.dipatch.IContent;
 import net.dipatch.IDispatchManager;
 import net.dipatch.ISender;
 import net.io.IContentFactory;
 import net.io.http.IHttpSession;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class NettyHttpHandler extends SimpleChannelInboundHandler<Object> {
 	
@@ -53,11 +53,16 @@ public class NettyHttpHandler extends SimpleChannelInboundHandler<Object> {
 			readHead(channel, (HttpRequest) msg);
 		} else if (msg instanceof HttpContent) { // http请求体
 			HttpContent httpContent = (HttpContent) msg;
-			ByteBuf content = httpContent.content();
 			Attribute<NettyHttpSession> session = channel.attr(SESSION);
 			NettyHttpSession httpSession = session.get();
 			if (httpSession != null) {
-				readContent(channel, httpSession, content);
+				ByteBuf content = httpContent.content();
+				httpSession.read(content);
+				if (httpContent instanceof LastHttpContent) {
+					byte[] datas = httpSession.datas;
+					httpSession.reset();
+					readContent(channel, httpSession, datas);
+				}
 			}
 		}
 	}
@@ -80,10 +85,8 @@ public class NettyHttpHandler extends SimpleChannelInboundHandler<Object> {
 		httpSession.setContentLength(contentLenght == null || contentLenght.length() == 0 ? 0 : Integer.parseInt(contentLenght));
 	}
 	
-	private void readContent(Channel channel, NettyHttpSession httpSession, ByteBuf buf) {
-	    byte[] data = new byte[buf.readableBytes()];
-	    buf.readBytes(data);
-		IContent content = nettyContentFactory.createContent(data, httpSession);
+	private void readContent(Channel channel, NettyHttpSession httpSession,  byte[] datas) {
+		IContent content = nettyContentFactory.createContent(datas, httpSession);
 //		log.info("addDispatch IP : {} sessionId : {}", channel.remoteAddress(), content.getSessionId());
 		dispatchManager.addDispatch(content);
 	}
@@ -117,6 +120,8 @@ public class NettyHttpHandler extends SimpleChannelInboundHandler<Object> {
 		private int contentLength;
 		
 		private int messageId;
+		
+		private byte[] datas;
 		
 		private final String id;
 		
@@ -162,6 +167,24 @@ public class NettyHttpHandler extends SimpleChannelInboundHandler<Object> {
 		@Override
 		public ISender getSender() {
 			return sender;
+		}
+		
+		public void read(ByteBuf content) {
+			int capacity = content.capacity();
+			byte[] datas = new byte[capacity];
+			content.readBytes(datas);
+			if (this.datas == null) {
+				this.datas = datas;
+			} else {
+				int oldLength = this.datas.length;
+				byte[] array = new byte[oldLength + capacity];
+				System.arraycopy(this.datas, 0, array, 0, oldLength);
+				System.arraycopy(datas, 0, array, oldLength, capacity);
+			}
+		}
+		
+		public void reset() {
+			datas = null;
 		}
 		
 	}
