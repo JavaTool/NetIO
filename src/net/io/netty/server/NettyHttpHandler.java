@@ -176,10 +176,7 @@ public class NettyHttpHandler extends SimpleChannelInboundHandler<Object> {
 			if (this.datas == null) {
 				this.datas = datas;
 			} else {
-				int oldLength = this.datas.length;
-				byte[] array = new byte[oldLength + capacity];
-				System.arraycopy(this.datas, 0, array, 0, oldLength);
-				System.arraycopy(datas, 0, array, oldLength, capacity);
+				this.datas = appendArray(this.datas, datas);
 			}
 		}
 		
@@ -187,6 +184,15 @@ public class NettyHttpHandler extends SimpleChannelInboundHandler<Object> {
 			datas = null;
 		}
 		
+	}
+	
+	private static byte[] appendArray(byte[] array1, byte[] array2) {
+		int length1 = array1.length;
+		int length2 = array2.length;
+		byte[] array = new byte[length1 + length2];
+		System.arraycopy(array1, 0, array, 0, length1);
+		System.arraycopy(array2, 0, array, length1, length2);
+		return array;
 	}
 
 }
