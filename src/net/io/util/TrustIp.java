@@ -7,13 +7,16 @@ import java.net.InetSocketAddress;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.io.mina.server.IOLog;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * ����IP����
  * @author 	lighthu
  */
 public class TrustIp {
+	
+	private static final Logger log = LoggerFactory.getLogger(TrustIp.class);
 	
 	private int[][] trustIps;
 	
@@ -23,10 +26,7 @@ public class TrustIp {
 	
 	private File file;
 	
-	private IOLog log;
-	
-	public TrustIp(String name, IOLog log) throws Exception {
-		this.log = log;
+	public TrustIp(String name) throws Exception {
 		file = new File(System.getProperty("user.dir"), name);
 		load();
 		lastModified = file.lastModified();
@@ -67,7 +67,7 @@ public class TrustIp {
 			try {
 				load();
 			} catch (Exception e) {
-				log.error(e);
+				log.error("", e);
 			}
 		}
 	}
