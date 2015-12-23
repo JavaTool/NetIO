@@ -11,7 +11,7 @@ public interface INetClient {
 	
 	void close() throws Exception;
 	
-	public default void sendMessage(IMessage message) throws Exception {
+	default void sendMessage(IMessage message) throws Exception {
 		ByteArrayOutputStream bout = new ByteArrayOutputStream();
 		DataOutputStream dos = new DataOutputStream(bout);
 		dos.writeInt(message.getMessageId());
