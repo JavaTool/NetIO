@@ -16,11 +16,11 @@ import io.netty.handler.codec.http.HttpRequest;
 import io.netty.handler.codec.http.LastHttpContent;
 import io.netty.util.Attribute;
 import io.netty.util.AttributeKey;
-import net.dipatch.Content;
-import net.dipatch.IContent;
 import net.dipatch.IDispatchManager;
-import net.dipatch.ISender;
-import net.io.IContentFactory;
+import net.io.ISender;
+import net.io.content.Content;
+import net.io.content.IContent;
+import net.io.content.IContentFactory;
 import net.io.http.IHttpSession;
 
 public class NettyHttpHandler extends SimpleChannelInboundHandler<Object> {

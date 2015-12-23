@@ -6,10 +6,10 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.util.Attribute;
 import io.netty.util.AttributeKey;
-import net.dipatch.IContent;
-import net.dipatch.IContentHandler;
-import net.dipatch.ISender;
-import net.io.IContentFactory;
+import net.io.ISender;
+import net.io.content.IContent;
+import net.io.content.IContentFactory;
+import net.io.content.IContentHandler;
 
 import java.util.UUID;
 

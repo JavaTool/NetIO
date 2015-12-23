@@ -1,4 +1,6 @@
-package net.dipatch;
+package net.io.content;
+
+import net.io.ISender;
 
 /**
  * 消息内容

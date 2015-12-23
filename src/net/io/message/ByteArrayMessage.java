@@ -1,6 +1,6 @@
 package net.io.message;
 
-import net.dipatch.ISender;
+import net.io.ISender;
 
 public class ByteArrayMessage extends BaseMessage {
 	

@@ -1,6 +1,7 @@
 package net.io;
 
-import net.dipatch.IContentHandler;
+import net.io.content.IContentFactory;
+import net.io.content.IContentHandler;
 
 import org.apache.commons.configuration.Configuration;
 

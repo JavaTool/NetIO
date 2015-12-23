@@ -9,10 +9,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import net.dipatch.Content;
-import net.dipatch.IContent;
-import net.dipatch.IContentHandler;
-import net.dipatch.ISender;
+import net.io.ISender;
+import net.io.content.Content;
+import net.io.content.IContent;
+import net.io.content.IContentHandler;
 import net.io.message.IMessage;
 import net.io.util.HttpConnectUtil;
 

@@ -13,10 +13,9 @@ import io.netty.handler.codec.http.ServerCookieEncoder;
 import io.netty.handler.codec.rtsp.RtspHeaders.Values;
 import io.netty.util.Attribute;
 import io.netty.util.AttributeKey;
+import net.io.ISender;
 
 import java.util.Set;
-
-import net.dipatch.ISender;
 
 public class NettyHttpSender implements ISender {
 	

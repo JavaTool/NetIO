@@ -1,6 +1,6 @@
 package net.io.http;
 
-import net.dipatch.ISender;
+import net.io.ISender;
 
 public interface IHttpSession {
 	

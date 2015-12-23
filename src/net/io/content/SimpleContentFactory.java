@@ -1,12 +1,10 @@
-package net.io;
+package net.io.content;
 
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
 
-import net.dipatch.Content;
-import net.dipatch.IContent;
-import net.dipatch.ISender;
+import net.io.ISender;
 import net.io.http.IHttpSession;
 
 import org.slf4j.Logger;

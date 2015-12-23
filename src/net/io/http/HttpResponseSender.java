@@ -5,7 +5,7 @@ import java.io.OutputStream;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpSession;
 
-import net.dipatch.ISender;
+import net.io.ISender;
 
 /**
  * HTTP响应发送器

@@ -1,4 +1,4 @@
-package net.dipatch;
+package net.io;
 
 /**
  * 数据发送器

@@ -20,8 +20,8 @@ import io.netty.handler.codec.http.HttpRequestDecoder;
 import io.netty.handler.codec.http.HttpServerCodec;
 import io.netty.handler.timeout.IdleStateHandler;
 import net.dipatch.IDispatchManager;
-import net.io.IContentFactory;
 import net.io.INetServer;
+import net.io.content.IContentFactory;
 
 public class NettyHttpServer implements INetServer, Runnable {
 	

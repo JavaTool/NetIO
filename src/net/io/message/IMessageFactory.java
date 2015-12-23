@@ -2,7 +2,7 @@ package net.io.message;
 
 import java.io.InputStream;
 
-import net.dipatch.ISender;
+import net.io.ISender;
 
 public interface IMessageFactory {
 	

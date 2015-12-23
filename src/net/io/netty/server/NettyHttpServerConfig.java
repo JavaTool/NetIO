@@ -1,7 +1,7 @@
 package net.io.netty.server;
 
 import net.dipatch.IDispatchManager;
-import net.io.IContentFactory;
+import net.io.content.IContentFactory;
 
 public class NettyHttpServerConfig {
 	

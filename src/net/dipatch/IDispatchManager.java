@@ -1,5 +1,7 @@
 package net.dipatch;
 
+import net.io.content.IContent;
+
 /**
  * 分配器管理器
  * @author 	fuhuiyuan

@@ -3,7 +3,7 @@ package net.io.message;
 import java.io.IOException;
 import java.io.OutputStream;
 
-import net.dipatch.ISender;
+import net.io.ISender;
 
 public abstract class BaseMessage implements IMessage {
 	

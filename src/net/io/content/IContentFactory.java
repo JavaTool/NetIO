@@ -1,7 +1,6 @@
-package net.io;
+package net.io.content;
 
-import net.dipatch.IContent;
-import net.dipatch.ISender;
+import net.io.ISender;
 import net.io.http.IHttpSession;
 
 public interface IContentFactory {

@@ -5,11 +5,10 @@ import io.netty.buffer.Unpooled;
 import io.netty.channel.Channel;
 import io.netty.util.Attribute;
 import io.netty.util.AttributeKey;
+import net.io.ISender;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
-
-import net.dipatch.ISender;
 
 public class NettyTcpSender implements ISender {
 	
