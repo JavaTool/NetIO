@@ -3,16 +3,16 @@ package net.io.protocal.proto;
 import net.dipatch.ISender;
 import net.io.BaseMessage;
 
-public class ProtoMessage extends BaseMessage {
+public class ByteArrayMessage extends BaseMessage {
 	
 	protected byte[] datas;
 	
-	public ProtoMessage(int messageId, int status, String sessionId, ISender sender, byte[] datas) {
+	public ByteArrayMessage(int messageId, int status, String sessionId, ISender sender, byte[] datas) {
 		super(messageId, status, sessionId, sender);
 		mergeFrom(datas);
 	}
 	
-	protected ProtoMessage() {
+	protected ByteArrayMessage() {
 		super();
 		mergeFrom(NULL_SEND_DATAS);
 	}
