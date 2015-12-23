@@ -13,7 +13,7 @@ import net.dipatch.Content;
 import net.dipatch.IContent;
 import net.dipatch.IContentHandler;
 import net.dipatch.ISender;
-import net.io.IMessage;
+import net.io.message.IMessage;
 import net.io.util.HttpConnectUtil;
 
 import org.slf4j.Logger;

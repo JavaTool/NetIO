@@ -1,4 +1,4 @@
-package net.io;
+package net.io.message;
 
 public interface IMessageSender {
 	

@@ -1,4 +1,4 @@
-package net.io;
+package net.io.message;
 
 import java.io.IOException;
 import java.io.OutputStream;

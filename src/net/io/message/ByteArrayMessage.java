@@ -1,7 +1,6 @@
-package net.io.protocal.proto;
+package net.io.message;
 
 import net.dipatch.ISender;
-import net.io.BaseMessage;
 
 public class ByteArrayMessage extends BaseMessage {
 	

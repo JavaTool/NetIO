@@ -3,6 +3,8 @@ package net.io;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 
+import net.io.message.IMessage;
+
 public interface INetClient {
 	
 	void connect(byte[] data);
