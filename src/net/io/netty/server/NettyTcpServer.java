@@ -1,5 +1,7 @@
 package net.io.netty.server;
 
+import java.net.InetSocketAddress;
+
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
@@ -19,6 +21,8 @@ public class NettyTcpServer implements INetServer {
 	
 	/**端口*/
 	private final int port;
+	
+	private final String ip;
 	/**消息接收器*/
 	private final IContentHandler contentHandler;
 	
@@ -26,7 +30,8 @@ public class NettyTcpServer implements INetServer {
 	
 	private ServerBootstrap serverBootstrap;
 
-	public NettyTcpServer(int port, IContentHandler contentHandler, IContentFactory contentFactory) {
+	public NettyTcpServer(String ip, int port, IContentHandler contentHandler, IContentFactory contentFactory) {
+		this.ip = ip;
 		this.port = port;
 		this.contentHandler = contentHandler;
 		this.contentFactory = contentFactory;
@@ -41,7 +46,7 @@ public class NettyTcpServer implements INetServer {
 			serverBootstrap.group(bossGroup, workerGroup).channel(NioServerSocketChannel.class).option(ChannelOption.SO_BACKLOG, 100).handler(new LoggingHandler(LogLevel.INFO));
 			// 注册TCP处理流水线
 			serverBootstrap.childHandler(new NettyTcpInitializer(contentHandler, contentFactory));
-			serverBootstrap.bind(port).sync().channel().closeFuture().sync();
+			serverBootstrap.bind(new InetSocketAddress(ip, port)).sync().channel().closeFuture().sync();
 		} finally {
 			shutdown();
 		}
