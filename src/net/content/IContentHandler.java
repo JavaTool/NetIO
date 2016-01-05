@@ -1,19 +1,25 @@
 package net.content;
 
 /**
- * 消息接收器
+ * A handler of {@link IContent}
  * @author 	fuhuiyuan
  */
 public interface IContentHandler {
 	
 	/**
-	 * 接收消息
+	 * Process a content.
 	 * @param 	content
-	 * 			消息
+	 * 			
 	 * @throws 	Exception
 	 */
 	void handle(IContent content) throws Exception;
-	
+	/**
+	 * Disconnect a connector.
+	 * @param 	sessionId
+	 * 			Indicate a id of client who connect server.
+	 * @param 	address
+	 * 			Server/Client ip
+	 */
 	void disconnect(String sessionId, String address);
 
 }

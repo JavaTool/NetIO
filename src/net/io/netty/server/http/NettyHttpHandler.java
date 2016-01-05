@@ -86,7 +86,9 @@ public class NettyHttpHandler extends SimpleChannelInboundHandler<Object> {
 	}
 	
 	private void readContent(Channel channel, NettyHttpSession httpSession,  byte[] datas) {
-		IContent content = nettyContentFactory.createContent(datas, httpSession);
+		String sessionId = httpSession.getId();
+		int messageId = httpSession.getMessageId();
+		IContent content = nettyContentFactory.createContent(sessionId, messageId, datas, httpSession.getSender());
 //		log.info("addDispatch IP : {} sessionId : {}", channel.remoteAddress(), content.getSessionId());
 		dispatchManager.addDispatch(content);
 	}

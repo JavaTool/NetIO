@@ -3,29 +3,32 @@ package net.content;
 import net.io.ISender;
 
 /**
- * 消息内容
+ * A content of net i/o.
  * @author 	fuhuiyuan
  */
 public interface IContent {
 	
 	/**
-	 * 获取会话id
-	 * @return	会话id
+	 * Get session id of this content.
+	 * Indicate a id of client who connect server.
+	 * @return	session id
 	 */
 	String getSessionId();
 	/**
-	 * 获取消息id
-	 * @return	消息id
+	 * Get message id of this content.
+	 * Indicate this content what to do.
+	 * @return	message id
 	 */
 	int getMessageId();
 	/**
-	 * 获取消息数据
-	 * @return	消息数据
+	 * Get byte array datas of message.
+	 * @return	byte array datas
 	 */
 	byte[] getDatas();
 	/**
-	 * 获取发送器
-	 * @return	发送器
+	 * Get sender of this content.
+	 * This sender use to send message to server/client
+	 * @return	{@link ISender}
 	 */
 	ISender getSender();
 
