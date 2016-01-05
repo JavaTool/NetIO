@@ -1,4 +1,4 @@
-package net.io.netty.server;
+package net.io.netty.server.http;
 
 import io.netty.buffer.Unpooled;
 import io.netty.channel.Channel;

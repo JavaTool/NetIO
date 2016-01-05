@@ -1,4 +1,4 @@
-package net.io.mina.server;
+package net.io.mina.server.tcp;
 
 import java.net.InetSocketAddress;
 
@@ -10,6 +10,8 @@ import org.apache.mina.transport.socket.nio.SocketAcceptorConfig;
 import net.content.IContentFactory;
 import net.content.IContentHandler;
 import net.io.INetServer;
+import net.io.mina.server.NullDecoder;
+import net.io.mina.server.NullEncoder;
 
 public class MinaTcpServer implements INetServer {
 	
@@ -53,7 +55,7 @@ public class MinaTcpServer implements INetServer {
 	}
 	
 	protected IoHandlerAdapter createIoHandlerAdapter() {
-		return new MinaIoHandler(contentHandler, contentFactory);
+		return new MinaTcpHandler(contentHandler, contentFactory);
 	}
 
 }

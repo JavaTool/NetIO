@@ -1,4 +1,4 @@
-package net.io.netty.server;
+package net.io.netty.server.http;
 
 import java.text.MessageFormat;
 import java.util.UUID;
@@ -21,7 +21,7 @@ import net.content.IContent;
 import net.content.IContentFactory;
 import net.dipatch.IDispatchManager;
 import net.io.ISender;
-import net.io.http.IHttpSession;
+import net.io.java.IHttpSession;
 
 public class NettyHttpHandler extends SimpleChannelInboundHandler<Object> {
 	

@@ -1,4 +1,4 @@
-package net.io;
+package net.io.java;
 
 /**
  * 连接反馈信息

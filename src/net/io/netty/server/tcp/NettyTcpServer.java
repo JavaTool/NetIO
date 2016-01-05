@@ -1,4 +1,4 @@
-package net.io.netty.server;
+package net.io.netty.server.tcp;
 
 import java.net.InetSocketAddress;
 

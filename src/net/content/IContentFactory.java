@@ -1,7 +1,7 @@
 package net.content;
 
 import net.io.ISender;
-import net.io.http.IHttpSession;
+import net.io.java.IHttpSession;
 
 public interface IContentFactory {
 	

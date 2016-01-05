@@ -20,8 +20,8 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import net.io.http.HttpStatus;
-import net.io.http.HttpBackInfo;
+import net.io.java.HttpBackInfo;
+import net.io.java.HttpStatus;
 
 /**
  * HTTP连接工具

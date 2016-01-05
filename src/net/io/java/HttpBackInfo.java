@@ -1,6 +1,4 @@
-package net.io.http;
-
-import net.io.ConnectBackInfo;
+package net.io.java;
 
 /**
  * HTTP反馈信息

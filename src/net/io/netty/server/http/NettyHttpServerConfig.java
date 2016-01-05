@@ -1,4 +1,4 @@
-package net.io.netty.server;
+package net.io.netty.server.http;
 
 import net.content.IContentFactory;
 import net.dipatch.IDispatchManager;

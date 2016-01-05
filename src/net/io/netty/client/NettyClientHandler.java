@@ -8,7 +8,7 @@ import io.netty.channel.ChannelInboundHandlerAdapter;
 import net.content.IContent;
 import net.content.IContentFactory;
 import net.content.IContentHandler;
-import net.io.netty.server.NettyTcpSender;
+import net.io.netty.server.tcp.NettyTcpSender;
 
 @Sharable
 public class NettyClientHandler extends ChannelInboundHandlerAdapter {

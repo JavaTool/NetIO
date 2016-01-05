@@ -1,4 +1,4 @@
-package net.io.mina.server;
+package net.io.mina.server.tcp;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
@@ -8,11 +8,11 @@ import org.apache.mina.common.IoSession;
 
 import net.io.ISender;
 
-public class MinaSender implements ISender {
+public class MinaTcpSender implements ISender {
 	
 	protected final IoSession session;
 	
-	public MinaSender(IoSession session) {
+	public MinaTcpSender(IoSession session) {
 		this.session = session;
 	}
 

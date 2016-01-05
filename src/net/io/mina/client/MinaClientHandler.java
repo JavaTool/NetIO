@@ -8,7 +8,7 @@ import org.apache.mina.common.IoSession;
 import net.content.IContent;
 import net.content.IContentFactory;
 import net.content.IContentHandler;
-import net.io.mina.server.MinaSender;
+import net.io.mina.server.tcp.MinaTcpSender;
 
 public class MinaClientHandler extends IoHandlerAdapter {
 	
@@ -35,7 +35,7 @@ public class MinaClientHandler extends IoHandlerAdapter {
 		ByteBuffer in = (ByteBuffer) message;
 		byte[] data = new byte[in.remaining()];
 	    in.get(data);
-		IContent content = contentFactory.createContent(data, new MinaSender(session));
+		IContent content = contentFactory.createContent(data, new MinaTcpSender(session));
 		if (content != null) {
 			contentHandler.handle(content);
 		}

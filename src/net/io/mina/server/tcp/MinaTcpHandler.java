@@ -1,4 +1,4 @@
-package net.io.mina.server;
+package net.io.mina.server.tcp;
 
 import static net.content.IContentFactory.SESSION_ID;
 
@@ -15,17 +15,17 @@ import net.content.IContentFactory;
 import net.content.IContentHandler;
 import net.io.ISender;
 
-public class MinaIoHandler extends IoHandlerAdapter {
+public class MinaTcpHandler extends IoHandlerAdapter {
 	
 	protected static final String SENDER_KEY = "SENDER_KEY";
 	
-	protected static final Logger log = LoggerFactory.getLogger(MinaIoHandler.class);
+	protected static final Logger log = LoggerFactory.getLogger(MinaTcpHandler.class);
 	
 	protected final IContentHandler contentHandler;
 	
 	protected final IContentFactory contentFactory;
 	
-	public MinaIoHandler(IContentHandler contentHandler, IContentFactory contentFactory) {
+	public MinaTcpHandler(IContentHandler contentHandler, IContentFactory contentFactory) {
 		this.contentHandler = contentHandler;
 		this.contentFactory = contentFactory;
 	}
@@ -39,7 +39,7 @@ public class MinaIoHandler extends IoHandlerAdapter {
     public void messageReceived(IoSession session, Object msg) throws Exception {
 		ISender sender = (ISender) session.getAttribute(SENDER_KEY);
 		if (sender == null) {
-			sender = new MinaSender(session);
+			sender = new MinaTcpSender(session);
 			session.setAttribute(SENDER_KEY, sender);
 			session.setAttribute(SESSION_ID, UUID.randomUUID().toString());
 		}

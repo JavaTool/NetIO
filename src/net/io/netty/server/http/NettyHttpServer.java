@@ -1,4 +1,4 @@
-package net.io.netty.server;
+package net.io.netty.server.http;
 
 import java.net.InetSocketAddress;
 import java.util.concurrent.TimeUnit;
