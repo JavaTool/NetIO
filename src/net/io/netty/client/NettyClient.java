@@ -51,7 +51,7 @@ public class NettyClient implements INetClient {
 	}
 	
 	@Override
-	public void connect(final byte[] data) {
+	public void send(final byte[] data) {
 		ByteBuf clientMessage = Unpooled.buffer(data.length);
 		clientMessage.writeInt(data.length);
 	    clientMessage.writeBytes(data);

@@ -1,8 +1,12 @@
 package net.io;
 
+/**
+ * A client of net connect.
+ * @author 	fuhuiyuan
+ */
 public interface INetClient {
 	
-	void connect(byte[] data);
+	void send(byte[] data);
 	
 	void close() throws Exception;
 
