@@ -1,4 +1,4 @@
-package net.io.mina.server.client;
+package net.io.mina.client;
 
 import java.net.ConnectException;
 import java.net.SocketAddress;
