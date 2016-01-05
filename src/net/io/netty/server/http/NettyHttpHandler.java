@@ -20,8 +20,8 @@ import net.content.Content;
 import net.content.IContent;
 import net.content.IContentFactory;
 import net.dipatch.IDispatchManager;
+import net.io.IHttpSession;
 import net.io.ISender;
-import net.io.java.IHttpSession;
 
 public class NettyHttpHandler extends SimpleChannelInboundHandler<Object> {
 	

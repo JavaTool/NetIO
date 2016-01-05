@@ -4,8 +4,8 @@ import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
 
+import net.io.IHttpSession;
 import net.io.ISender;
-import net.io.java.IHttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

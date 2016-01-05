@@ -1,6 +1,4 @@
-package net.io.java;
-
-import net.io.ISender;
+package net.io;
 
 public interface IHttpSession {
 	
