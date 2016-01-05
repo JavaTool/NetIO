@@ -9,8 +9,8 @@ import org.slf4j.LoggerFactory;
 
 import com.google.common.util.concurrent.AbstractScheduledService;
 
-import net.io.content.IContent;
-import net.io.content.IContentHandler;
+import net.content.IContent;
+import net.content.IContentHandler;
 
 /**
  * 默认的消息分配器

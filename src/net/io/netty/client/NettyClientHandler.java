@@ -5,9 +5,9 @@ import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandler.Sharable;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
-import net.io.content.IContent;
-import net.io.content.IContentFactory;
-import net.io.content.IContentHandler;
+import net.content.IContent;
+import net.content.IContentFactory;
+import net.content.IContentHandler;
 import net.io.netty.server.NettyTcpSender;
 
 @Sharable

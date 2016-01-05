@@ -9,12 +9,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import net.content.Content;
+import net.content.IContent;
+import net.content.IContentHandler;
 import net.io.ISender;
-import net.io.content.Content;
-import net.io.content.IContent;
-import net.io.content.IContentHandler;
-import net.io.message.IMessage;
-import net.io.util.HttpConnectUtil;
+import net.message.IMessage;
+import net.util.HttpConnectUtil;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -1,4 +1,4 @@
-package net.io.util;
+package net.util;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;

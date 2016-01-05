@@ -1,4 +1,4 @@
-package net.io.content;
+package net.content;
 
 import net.io.ISender;
 import net.io.http.IHttpSession;

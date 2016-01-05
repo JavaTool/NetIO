@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URISyntaxException;
 
-import net.io.util.HttpConnectUtil;
+import net.util.HttpConnectUtil;
 
 /**
  * HTTP连接器

@@ -1,4 +1,4 @@
-package net.io.content;
+package net.content;
 
 /**
  * 消息接收器

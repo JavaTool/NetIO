@@ -8,8 +8,8 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
 
 import com.google.common.util.concurrent.Service;
 
-import net.io.content.IContent;
-import net.io.content.IContentHandler;
+import net.content.IContent;
+import net.content.IContentHandler;
 
 /**
  * 默认的分配管理器

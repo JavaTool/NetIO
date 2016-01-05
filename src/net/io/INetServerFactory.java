@@ -1,9 +1,9 @@
 package net.io;
 
-import net.io.content.IContentFactory;
-import net.io.content.IContentHandler;
-
 import org.apache.commons.configuration.Configuration;
+
+import net.content.IContentFactory;
+import net.content.IContentHandler;
 
 public interface INetServerFactory {
 	

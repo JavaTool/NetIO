@@ -1,4 +1,4 @@
-package net.io.content;
+package net.content;
 
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;

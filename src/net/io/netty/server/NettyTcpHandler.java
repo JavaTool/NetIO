@@ -6,10 +6,10 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.util.Attribute;
 import io.netty.util.AttributeKey;
+import net.content.IContent;
+import net.content.IContentFactory;
+import net.content.IContentHandler;
 import net.io.ISender;
-import net.io.content.IContent;
-import net.io.content.IContentFactory;
-import net.io.content.IContentHandler;
 
 import java.util.UUID;
 
@@ -28,9 +28,9 @@ public class NettyTcpHandler extends SimpleChannelInboundHandler<ByteBuf> {
 	
 	protected static final Logger log = LoggerFactory.getLogger(NettyTcpHandler.class);
 	/**消息处理器*/
-	private final IContentHandler contentHandler;
+	protected final IContentHandler contentHandler;
 	/**消息工厂*/
-	private final IContentFactory contentFactory;
+	protected final IContentFactory contentFactory;
 	
 	public NettyTcpHandler(IContentHandler contentHandler, IContentFactory contentFactory) {
 		this.contentHandler = contentHandler;

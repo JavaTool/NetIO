@@ -1,6 +1,6 @@
 package net.dipatch;
 
-import net.io.content.IContent;
+import net.content.IContent;
 
 /**
  * 消息分配器

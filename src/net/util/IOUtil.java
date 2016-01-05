@@ -1,4 +1,4 @@
-package net.io.util;
+package net.util;
 
 public class IOUtil {
 	

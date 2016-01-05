@@ -1,4 +1,4 @@
-package net.io.message;
+package net.message;
 
 import java.io.InputStream;
 
