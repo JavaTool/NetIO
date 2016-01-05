@@ -19,18 +19,41 @@ import net.io.INetClient;
 
 public class NettyClient implements INetClient {
 	
-    protected final EventLoopGroup group;
+    protected EventLoopGroup group;
     
-	protected final Bootstrap bootstrap;
-	
-	protected final NettyClientHandler nettyClientHandler;
+	protected Bootstrap bootstrap;
 	
 	protected Channel socketChannel;
 	
-	public NettyClient(final IContentHandler contentHandler, final IContentFactory contentFactory, int port, String host) throws Exception {
+	protected final NettyClientHandler nettyClientHandler;
+	
+	public NettyClient(final IContentHandler contentHandler, final IContentFactory contentFactory) {
+		nettyClientHandler = createNettyClientHandler(contentHandler, contentFactory);
+	}
+	
+	protected NettyClientHandler createNettyClientHandler(IContentHandler contentHandler, IContentFactory contentFactory) {
+		return new NettyClientHandler(contentHandler, contentFactory);
+	}
+	
+	@Override
+	public void send(final byte[] data) {
+		ByteBuf clientMessage = Unpooled.buffer(data.length);
+		clientMessage.writeInt(data.length);
+	    clientMessage.writeBytes(data);
+    	socketChannel.writeAndFlush(clientMessage);
+	}
+
+	@Override
+	public void close() {
+		if (group != null) {
+			group.shutdownGracefully();
+		}
+	}
+
+	@Override
+	public void connect(String ip, int port) throws Exception {
 		group = new NioEventLoopGroup();
 		bootstrap = new Bootstrap();
-		nettyClientHandler = new NettyClientHandler(contentHandler, contentFactory);
 		bootstrap.group(group).channel(NioSocketChannel.class).option(ChannelOption.SO_KEEPALIVE, true).option(ChannelOption.TCP_NODELAY, true);
 //		bootstrap.remoteAddress(host, port);
 		bootstrap.handler(new ChannelInitializer<SocketChannel>() {
@@ -44,23 +67,10 @@ public class NettyClient implements INetClient {
         
     	});
     	// 发起异步链接操作
-    	ChannelFuture channelFuture = bootstrap.connect(host, port).sync();
+    	ChannelFuture channelFuture = bootstrap.connect(ip, port).sync();
     	if (channelFuture.isSuccess()) {
     		socketChannel = channelFuture.channel();
     	}
-	}
-	
-	@Override
-	public void send(final byte[] data) {
-		ByteBuf clientMessage = Unpooled.buffer(data.length);
-		clientMessage.writeInt(data.length);
-	    clientMessage.writeBytes(data);
-    	socketChannel.writeAndFlush(clientMessage);
-	}
-
-	@Override
-	public void close() {
-		group.shutdownGracefully();
 	}
 
 }

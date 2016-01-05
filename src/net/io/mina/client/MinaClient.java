@@ -1,12 +1,11 @@
 package net.io.mina.client;
 
-import java.net.ConnectException;
 import java.net.InetSocketAddress;
-import java.net.SocketAddress;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import org.apache.log4j.Logger;
+import org.apache.mina.common.ByteBuffer;
 import org.apache.mina.common.ConnectFuture;
 import org.apache.mina.common.ThreadModel;
 import org.apache.mina.transport.socket.nio.SocketConnector;
@@ -14,12 +13,11 @@ import org.apache.mina.transport.socket.nio.SocketConnectorConfig;
 
 import net.content.IContentFactory;
 import net.content.IContentHandler;
+import net.io.INetClient;
 
-public abstract class MinaClient {
-	
+public class MinaClient implements INetClient {
+
 	protected static final Logger log = Logger.getLogger(MinaClient.class);
-	
-	protected SocketAddress address;
 	
 	protected SocketConnector connector;
 	
@@ -37,14 +35,13 @@ public abstract class MinaClient {
 	
 	protected final IContentFactory contentFactory;
 	
-	public MinaClient(String ip, int port, IContentHandler contentHandler, IContentFactory contentFactory) {
-		this.address = new InetSocketAddress(ip, port);
+	public MinaClient(IContentHandler contentHandler, IContentFactory contentFactory) {
 		this.contentHandler = contentHandler;
 		this.contentFactory = contentFactory;
 		initConnector();
 	}
 	
-	private void initConnector() {
+	protected void initConnector() {
 		executor = Executors.newCachedThreadPool();
 		connector = new SocketConnector(1, executor);
 		config = new SocketConnectorConfig();
@@ -53,66 +50,30 @@ public abstract class MinaClient {
 		config.getSessionConfig().setSendBufferSize(sendBufferSize);
 		config.getSessionConfig().setReceiveBufferSize(receiveBufferSize);
 		minaHandler = createMinaClientHandler();
-		init();
 	}
-	
-	protected abstract void init();
 	
 	protected MinaClientHandler createMinaClientHandler() {
 		return new MinaClientHandler(contentHandler, contentFactory);
 	}
-	
-	public void connect() throws ConnectException {
-//		if ((connected) || (valid)) {
-//			throw new IllegalStateException("connection is connected");
-//		} else {
-			connectFuture = connector.connect(address, minaHandler, config);
-//			synchronized (lock) {
-//				try {
-//					lock.wait(10000L);
-//				} catch (InterruptedException e) {
-//					e.printStackTrace();
-//				}
-//				if (!valid) {
-//					if (session != null) {
-//						session.close();
-//					}
-//					connected = false;
-//					throw new ConnectException("connect [" + address + "] error");
-//				}
-//			}
-//		}
-	}
-	
-//	public boolean isValid() {
-//		return valid;
-//	}
-	
+
+	@Override
 	public void close() throws Exception {
-//		setNeedRetry(false);
 		minaHandler.close();
 		executor.shutdown();
 		config.getFilterChain().clear();
 	}
 	
-	public SocketAddress getRemoteAddress() {
-		return address;
+	@Override
+	public void send(byte[] data) {
+		ByteBuffer buff = ByteBuffer.allocate(data.length);
+		buff.putInt(data.length);
+		buff.put(data);
+		minaHandler.send(buff);
 	}
-	
-	public void send(Object object) {
-		minaHandler.send(object);
-	}
-	
-//	public void setNeedRetry(boolean needRetry) {
-//		this.needRetry = needRetry;
-//	}
-	
-//	public boolean isNeedRetry() {
-//		return needRetry;
-//	}
-	
-	public boolean isConnected() {
-		return minaHandler.isConnected();
+
+	@Override
+	public void connect(String ip, int port) throws Exception {
+		connectFuture = connector.connect(new InetSocketAddress(ip, port), minaHandler, config);
 	}
 
 }
