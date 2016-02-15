@@ -1,5 +1,11 @@
 package net.io.netty.server.tcp;
 
+import java.io.DataOutputStream;
+import java.util.UUID;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
@@ -10,11 +16,7 @@ import net.content.IContent;
 import net.content.IContentFactory;
 import net.content.IContentHandler;
 import net.io.ISender;
-
-import java.util.UUID;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import net.io.anthenticate.IDataAnthenticate;
 
 /**
  * TCP处理器
@@ -32,9 +34,13 @@ public class NettyTcpHandler extends SimpleChannelInboundHandler<ByteBuf> {
 	/**消息工厂*/
 	protected final IContentFactory contentFactory;
 	
+	protected final int anthencateLength;
+	
 	public NettyTcpHandler(IContentHandler contentHandler, IContentFactory contentFactory) {
 		this.contentHandler = contentHandler;
 		this.contentFactory = contentFactory;
+		IDataAnthenticate<byte[], DataOutputStream> dataAnthenticate = contentFactory.getDataAnthenticate();
+		anthencateLength =  dataAnthenticate == null ? 0 : dataAnthenticate.getAnthenticateLength();
 	}
 
 	@Override
@@ -63,21 +69,33 @@ public class NettyTcpHandler extends SimpleChannelInboundHandler<ByteBuf> {
 
 	@Override
 	protected void channelRead0(ChannelHandlerContext ctx, ByteBuf msg) throws Exception {
-		Channel channel = ctx.channel();
-		Attribute<ISender> attribute = channel.attr(SENDER_KEY);
-		ISender sender = attribute.get();
-		if (sender == null) {
-			sender = new NettyTcpSender(channel);
-			attribute.set(sender);
-			Attribute<String> session = channel.attr(SESSSION_ID_KEY);
-			session.set(UUID.randomUUID().toString());
+		if (check(msg)) {
+			Channel channel = ctx.channel();
+			Attribute<ISender> attribute = channel.attr(SENDER_KEY);
+			ISender sender = attribute.get();
+			if (sender == null) {
+				sender = new NettyTcpSender(channel, contentFactory.getDataAnthenticate());
+				attribute.set(sender);
+				Attribute<String> session = channel.attr(SESSSION_ID_KEY);
+				session.set(UUID.randomUUID().toString());
+			}
+	
+		    byte[] data = new byte[msg.readableBytes()];
+		    msg.readBytes(data);
+			IContent content = contentFactory.createContent(data, sender);
+			if (content != null) {
+				contentHandler.handle(content);
+			}
 		}
-
-	    byte[] data = new byte[msg.readableBytes()];
-	    msg.readBytes(data);
-		IContent content = contentFactory.createContent(data, sender);
-		if (content != null) {
-			contentHandler.handle(content);
+	}
+	
+	private boolean check(ByteBuf msg) {
+		if (anthencateLength > 0) {
+			byte[] data = new byte[anthencateLength];
+			msg.readBytes(data);
+			return contentFactory.getDataAnthenticate().read(data);
+		} else {
+			return true;
 		}
 	}
 

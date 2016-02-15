@@ -1,28 +1,39 @@
 package net.io.netty.server.tcp;
 
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
+
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.Channel;
 import io.netty.util.Attribute;
 import io.netty.util.AttributeKey;
 import net.io.ISender;
-
-import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
+import net.io.anthenticate.IDataAnthenticate;
 
 public class NettyTcpSender implements ISender {
 	
 	protected final Channel channel;
 	
-	public NettyTcpSender(Channel channel) {
+	protected final IDataAnthenticate<byte[], DataOutputStream> dataAnthenticate;
+	
+	public NettyTcpSender(Channel channel, IDataAnthenticate<byte[], DataOutputStream> dataAnthenticate) {
 		this.channel = channel;
+		this.dataAnthenticate = dataAnthenticate;
+	}
+	
+	private int getAnthenticateLength() {
+		return dataAnthenticate == null ? 0 : dataAnthenticate.getAnthenticateLength();
 	}
 
 	@Override
 	public void send(byte[] datas, int messageId) throws Exception {
 		ByteArrayOutputStream bout = new ByteArrayOutputStream();
 		DataOutputStream dos = new DataOutputStream(bout);
-		dos.writeInt(datas.length + 8);
+		dos.writeInt(datas.length + 8 + getAnthenticateLength());
+		if (dataAnthenticate != null) {
+			dataAnthenticate.write(dos);
+		}
 		dos.writeInt(messageId);
 		dos.writeInt(datas.length);
 //		dos.write(EncryptUtil.encrypt(resultMessage, resultMessage.length, EncryptUtil.PASSWORD));

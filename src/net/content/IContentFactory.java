@@ -1,6 +1,9 @@
 package net.content;
 
+import java.io.DataOutputStream;
+
 import net.io.ISender;
+import net.io.anthenticate.IDataAnthenticate;
 
 /**
  * A factory of {@link IContent} creator.
@@ -35,5 +38,7 @@ public interface IContentFactory {
 	 * @return	{@link IContent}
 	 */
 	IContent createContent(byte[] data, ISender sender);
+	
+	IDataAnthenticate<byte[], DataOutputStream> getDataAnthenticate();
 
 }
