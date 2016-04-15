@@ -1,6 +1,7 @@
 package net.io.netty.server.http;
 
 import java.text.MessageFormat;
+import java.util.Map.Entry;
 import java.util.UUID;
 
 import org.slf4j.Logger;
@@ -69,20 +70,36 @@ public class NettyHttpHandler extends SimpleChannelInboundHandler<Object> {
 	
 	private void readHead(Channel channel, HttpRequest req) {
 		HttpHeaders headers = req.headers();
-		String cookie = headers.get(COOKIE);
-		if (cookie != null) {
-			cookie = cookie.replaceFirst("JSESSIONID", "jsessionid");
+		// 输出HTTP头信息
+		StringBuilder builder = new StringBuilder("Netty http content :");
+		for (Entry<String, String> entry : headers.entries()) {
+			builder.append(" [ ").append(entry.getKey()).append(" : ").append(entry.getValue()).append(" ]");
 		}
-		Attribute<NettyHttpSession> session = channel.attr(SESSION);
-		NettyHttpSession httpSession = session.get();
-		if (httpSession == null) {
+		log.info(builder.toString());
+		// 解析HTTP头信息
+		String messageId = headers.get(MESSAGE_ID);
+		if (messageId != null && messageId.length() > 0) {
+			Attribute<NettyHttpSession> session = channel.attr(SESSION);
+			NettyHttpSession httpSession = session.get();
+			// 读取Cookie
+			String cookie = headers.get(COOKIE);
+			if (cookie != null) {
+				cookie = cookie.replaceFirst("JSESSIONID", "jsessionid");
+			}
+			// 获取session
 			String sessionId = cookie == null || cookie.length() == 0 ? MessageFormat.format(COOKIE_FORMT, UUID.randomUUID().toString()) : cookie;
-			httpSession = new NettyHttpSession(sessionId, HttpHeaders.isKeepAlive(req), channel);
-			session.set(httpSession);
+			if (httpSession == null) { // 没有session的链接，一般为新链接
+				httpSession = new NettyHttpSession(sessionId, HttpHeaders.isKeepAlive(req), channel);
+				session.set(httpSession);
+			} else if (!sessionId.equals(httpSession.getId())) { // 同一链接使用新的session
+				httpSession = new NettyHttpSession(sessionId, HttpHeaders.isKeepAlive(req), channel);
+				session.set(httpSession);
+			}
+			// 设置HTTP头信息
+			httpSession.setMessageId(Integer.parseInt(messageId));
+			String contentLenght = headers.get(CONTENT_LENGHT);
+			httpSession.setContentLength(contentLenght == null || contentLenght.length() == 0 ? 0 : Integer.parseInt(contentLenght));
 		}
-		httpSession.setMessageId(Integer.parseInt(headers.get(MESSAGE_ID)));
-		String contentLenght = headers.get(CONTENT_LENGHT);
-		httpSession.setContentLength(contentLenght == null || contentLenght.length() == 0 ? 0 : Integer.parseInt(contentLenght));
 	}
 	
 	private void readContent(Channel channel, NettyHttpSession httpSession,  byte[] datas) {
