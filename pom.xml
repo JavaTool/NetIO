@@ -17,7 +17,7 @@
     <plugins>
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.1</version>
+        <version>3.3</version>
         <configuration>
           <source>1.8</source>
           <target>1.8</target>
@@ -34,7 +34,7 @@
     <dependency>
 		<groupId>com.google.guava</groupId>
 		<artifactId>guava</artifactId>
-		<version>14.0</version>
+		<version>19.0</version>
 	</dependency>
     <dependency>
 		<groupId>commons-configuration</groupId>
@@ -80,6 +80,16 @@
 		<groupId>org.apache.mina</groupId>
 		<artifactId>mina-core</artifactId>
 		<version>1.1.7</version>
+	</dependency>
+	<dependency>
+		<groupId>org.eclipse.jetty</groupId>
+		<artifactId>jetty-server</artifactId>
+		<version>9.2.3.v20140905</version>
+	</dependency>
+	<dependency>
+		<groupId>org.eclipse.jetty</groupId>
+		<artifactId>jetty-webapp</artifactId>
+		<version>9.2.3.v20140905</version>
 	</dependency>
   </dependencies>
   <url>https://github.com/JavaTool/NetIO.git</url>

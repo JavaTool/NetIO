@@ -59,7 +59,7 @@ public class DispatchManager implements IDispatchManager {
 			Dispatch dis = new Dispatch(handler);
 			serviceList.add(dis);
 			dispatchs.put(key, dis);
-			dis.start();
+			dis.startAsync();
 			return dis;
 		} else {
 			return dispatch;
