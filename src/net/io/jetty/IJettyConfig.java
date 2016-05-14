@@ -10,9 +10,7 @@ public interface IJettyConfig {
 		return 20;
 	}
 	
-	default int getPort() {
-		return 8080;
-	}
+	int getPort();
 	
 	default String getResourceBase() {
 		return "./" + getWar();
@@ -26,7 +24,9 @@ public interface IJettyConfig {
 		return "WebContent";
 	}
 	
-	String getContextPath();
+	default String getContextPath() {
+		return getClass().getSimpleName();
+	}
 	
 	default boolean getParentLoaderPriority() {
 		return true;
