@@ -25,7 +25,7 @@ public interface IJettyConfig {
 	}
 	
 	default String getContextPath() {
-		return getClass().getSimpleName();
+		return "/" + getClass().getSimpleName();
 	}
 	
 	default boolean getParentLoaderPriority() {

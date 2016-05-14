@@ -34,9 +34,8 @@ public class JettyServer {
 
 		server.setHandler(context);
 		server.start();
-		server.join();
-		
 		log.info("JettyServer start.");
+		server.join();
 	}
 
 }
