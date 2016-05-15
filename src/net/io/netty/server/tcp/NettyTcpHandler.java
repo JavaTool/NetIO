@@ -12,11 +12,13 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.util.Attribute;
 import io.netty.util.AttributeKey;
+import net.content.Content;
 import net.content.IContent;
 import net.content.IContentFactory;
-import net.content.IContentHandler;
+import net.dipatch.IDispatchManager;
 import net.io.ISender;
 import net.io.anthenticate.IDataAnthenticate;
+import net.io.netty.server.http.NettyHttpSender;
 
 /**
  * TCP处理器
@@ -30,14 +32,14 @@ public class NettyTcpHandler extends SimpleChannelInboundHandler<ByteBuf> {
 	
 	protected static final Logger log = LoggerFactory.getLogger(NettyTcpHandler.class);
 	/**消息处理器*/
-	protected final IContentHandler contentHandler;
+	protected final IDispatchManager dispatchManager;
 	/**消息工厂*/
 	protected final IContentFactory contentFactory;
 	
 	protected final int anthencateLength;
 	
-	public NettyTcpHandler(IContentHandler contentHandler, IContentFactory contentFactory) {
-		this.contentHandler = contentHandler;
+	public NettyTcpHandler(IDispatchManager dispatchManager, IContentFactory contentFactory) {
+		this.dispatchManager = dispatchManager;
 		this.contentFactory = contentFactory;
 		IDataAnthenticate<byte[], DataOutputStream> dataAnthenticate = contentFactory.getDataAnthenticate();
 		anthencateLength =  dataAnthenticate == null ? 0 : dataAnthenticate.getAnthenticateLength();
@@ -50,13 +52,14 @@ public class NettyTcpHandler extends SimpleChannelInboundHandler<ByteBuf> {
 
 	@Override
 	public void channelInactive(ChannelHandlerContext ctx) throws Exception {
-		String address = ctx.channel().remoteAddress().toString();
-		String sessionId = ctx.channel().attr(SESSSION_ID_KEY).get();
+		Channel channel = ctx.channel();
+		String address = channel.remoteAddress().toString();
+		String sessionId = channel.attr(SESSSION_ID_KEY).get();
 		log.info("[Coming Out]IP:{}", address);
-		ctx.channel().close();
+		channel.close();
 		ctx.close();
 		if (sessionId != null) {
-			contentHandler.disconnect(sessionId, address);
+			dispatchManager.disconnect(new Content(sessionId, 0, null, new NettyHttpSender(true, sessionId, channel)));
 		}
 	}
 
@@ -84,7 +87,7 @@ public class NettyTcpHandler extends SimpleChannelInboundHandler<ByteBuf> {
 		    msg.readBytes(data);
 			IContent content = contentFactory.createContent(data, sender);
 			if (content != null) {
-				contentHandler.handle(content);
+				dispatchManager.addDispatch(content);
 			}
 		}
 	}

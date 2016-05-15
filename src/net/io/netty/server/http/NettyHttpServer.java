@@ -1,7 +1,11 @@
 package net.io.netty.server.http;
 
+import static io.netty.channel.ChannelOption.SO_BACKLOG;
+import static io.netty.channel.ChannelOption.TCP_NODELAY;
+import static io.netty.channel.ChannelOption.SO_KEEPALIVE;
+import static java.util.concurrent.TimeUnit.SECONDS;
+
 import java.net.InetSocketAddress;
-import java.util.concurrent.TimeUnit;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,7 +13,6 @@ import org.slf4j.LoggerFactory;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
-import io.netty.channel.ChannelOption;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.SimpleChannelInboundHandler;
@@ -22,6 +25,7 @@ import io.netty.handler.timeout.IdleStateHandler;
 import net.content.IContentFactory;
 import net.dipatch.IDispatchManager;
 import net.io.INetServer;
+import net.io.netty.server.INettyServerConfig;
 
 public class NettyHttpServer implements INetServer, Runnable {
 	
@@ -49,7 +53,7 @@ public class NettyHttpServer implements INetServer, Runnable {
 	
 	private ServerBootstrap serverBootstrap;
 	
-	public NettyHttpServer(NettyHttpServerConfig config) {
+	public NettyHttpServer(INettyServerConfig config) {
 		dispatchManager = config.getDispatchManager();
 		nettyContentFactory = config.getNettyContentFactory();
 		parentThreadNum = config.getParentThreadNum();
@@ -69,13 +73,13 @@ public class NettyHttpServer implements INetServer, Runnable {
 		EventLoopGroup workerGroup = new NioEventLoopGroup(childThreadNum);
 		try {
 			serverBootstrap = new ServerBootstrap();
-			serverBootstrap.group(bossGroup, workerGroup).channel(NioServerSocketChannel.class).option(ChannelOption.SO_BACKLOG, soBacklog).option(ChannelOption.TCP_NODELAY, true)
-			.option(ChannelOption.SO_KEEPALIVE, true).childHandler(new ChannelInitializer<SocketChannel>() {
+			serverBootstrap.group(bossGroup, workerGroup).channel(NioServerSocketChannel.class).option(SO_BACKLOG, soBacklog).option(TCP_NODELAY, true)
+			.option(SO_KEEPALIVE, true).childHandler(new ChannelInitializer<SocketChannel>() {
 				
 				 @Override 
 			 	 protected void initChannel(SocketChannel ch) throws Exception {
 					 ChannelPipeline p = ch.pipeline();
-					 p.addLast("idleStateHandler", new IdleStateHandler(readerIdleTime, writerIdleTime, allIdleTime, TimeUnit.SECONDS)); // 读信道空闲,写信道空闲,读，写信道空闲
+					 p.addLast("idleStateHandler", new IdleStateHandler(readerIdleTime, writerIdleTime, allIdleTime, SECONDS)); // 读信道空闲,写信道空闲,读，写信道空闲
 					 p.addLast("HttpRequestDecoder", new HttpRequestDecoder()); // http消息转换
 					 p.addLast("http_server_codec", new HttpServerCodec()); // http消息转换
 			         p.addLast("http_server_handler", createChannelHandler()); // 消息处理器 
@@ -84,7 +88,7 @@ public class NettyHttpServer implements INetServer, Runnable {
 			});
 			// Start the tcp server.
 			ChannelFuture f = serverBootstrap.bind(new InetSocketAddress(ip, port)); // 启动http服务进程
-			log.info("start http server ok at http://{}:{}/ [readerIdleTime, writerIdleTime, allIdleTime, soBacklog, parentThreadNum, childThreadNum][{}, {}, {}, {}, {}, {}]", 
+			log.info("start http server at http://{}:{}/ [readerIdleTime, writerIdleTime, allIdleTime, soBacklog, parentThreadNum, childThreadNum][{}, {}, {}, {}, {}, {}]", 
 					ip, port, readerIdleTime, writerIdleTime, allIdleTime, soBacklog, parentThreadNum, childThreadNum);
 			// Wait until the server socket is closed.
 			f.channel().closeFuture().await();
