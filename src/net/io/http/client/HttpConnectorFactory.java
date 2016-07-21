@@ -1,5 +1,7 @@
 package net.io.http.client;
 
+import java.io.InputStream;
+
 import org.apache.http.HttpResponse;
 
 import com.alibaba.fastjson.JSONObject;
@@ -28,6 +30,10 @@ public class HttpConnectorFactory {
 	
 	public static IHttpConnector<HttpBackInfo> createHttpBackInfo() {
 		return new HttpProtoConnector(createHttpResponse());
+	}
+	
+	public static IHttpConnector<InputStream> createInputStream() {
+		return new HttpInputStreamConnector(createHttpResponse());
 	}
 
 }
