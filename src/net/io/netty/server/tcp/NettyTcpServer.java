@@ -16,9 +16,9 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
 import io.netty.handler.logging.LoggingHandler;
 import io.netty.handler.timeout.IdleStateHandler;
-import net.content.IContentFactory;
-import net.dipatch.IDispatchManager;
 import net.io.INetServer;
+import net.io.dispatch.IContentFactory;
+import net.io.dispatch.IDispatchManager;
 import net.io.netty.server.INettyServerConfig;
 
 /**

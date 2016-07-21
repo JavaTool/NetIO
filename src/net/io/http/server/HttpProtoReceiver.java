@@ -1,4 +1,4 @@
-package net.io.java;
+package net.io.http.server;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -9,23 +9,23 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import net.content.Content;
-import net.content.IContent;
-import net.content.IContentHandler;
-import net.io.ISender;
-import net.message.IMessage;
-import net.util.HttpConnectUtil;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import net.io.ISender;
+import net.io.dispatch.Content;
+import net.io.dispatch.IContent;
+import net.io.dispatch.IContentHandler;
+import net.io.http.HttpStatus;
+import net.util.HttpConnectUtil;
+
 /**
- * Http消息接收器
+ * Proto消息接收器
  * @author 	fuhuiyuan
  */
-public abstract class HttpReceiver extends HttpServlet implements HttpStatus {
+public class HttpProtoReceiver extends HttpServlet implements HttpStatus {
 	
-	private static final Logger log = LoggerFactory.getLogger(HttpReceiver.class);
+	private static final Logger log = LoggerFactory.getLogger(HttpProtoReceiver.class);
 
 	private static final long serialVersionUID = 1L;
 	
@@ -47,13 +47,16 @@ public abstract class HttpReceiver extends HttpServlet implements HttpStatus {
 			session.setAttribute(SESSION_IP, ip);
 		}
 		
-		ISender sender = new HttpResponseSender(response, session, ip);
+		ISender sender = new HttpResponseSender(response, session);
 		try {
-			log.info("Session id is {} : {}.", session.getId(), ip);
 			int messageId = Integer.parseInt(req.getHeader("MessageId"));
 			byte[] decrypt = HttpConnectUtil.getRequestProtoContent(req);
 			
-			IContent content = new Content(session.getId(), messageId, decrypt, sender);
+			IContent content = new Content(getSessionId(req), messageId, decrypt, sender);
+			System.out.println("===========================");
+			System.out.println(content.getMessageId());
+			System.out.println(content.getSessionId());
+			System.out.println("===========================");
 			IContentHandler contentHandler = (IContentHandler) req.getServletContext().getAttribute(IContentHandler.class.getName());
 			contentHandler.handle(content);
 		} catch (Exception e) {
@@ -62,6 +65,10 @@ public abstract class HttpReceiver extends HttpServlet implements HttpStatus {
 			os.close();
 			return;
 		}
+	}
+	
+	protected String getSessionId(HttpServletRequest req) {
+		return req.getSession().getId();
 	}
 	
 	/**
@@ -76,13 +83,13 @@ public abstract class HttpReceiver extends HttpServlet implements HttpStatus {
 	 */
 	private void error(Exception e, HttpServletResponse response, OutputStream os) throws IOException {
 		log.error("", e);
-		IMessage errorResponse = createErrorResponse(e);
-		response.setContentType("text/plain; charset=UTF-8; " + HttpConnectUtil.MESSAGEID + "=" + errorResponse.getMessageId());
-		response.setStatus(HTTP_STATUS_SUCCESS);
-		errorResponse.output(os);
+//		VO_Error.Builder builder = VO_Error.newBuilder();
+//		builder.setErrorCode(0);
+//		builder.setErrorMsg("Unprocessor exception.");
+//		response.setContentType("text/plain; charset=UTF-8; " + MessageId.class.getSimpleName() + "=" + MessageId.MIVO_Error.name());
+//		response.setStatus(HTTP_STATUS_SUCCESS);
+//		os.write(builder.build().toByteArray());
 	}
-	
-	protected abstract IMessage createErrorResponse(Exception e);
 	
 	/**
 	 * 获取解析的地址

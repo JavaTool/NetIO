@@ -1,8 +1,8 @@
 package net.io.netty.server.http;
 
 import static io.netty.channel.ChannelOption.SO_BACKLOG;
-import static io.netty.channel.ChannelOption.TCP_NODELAY;
 import static io.netty.channel.ChannelOption.SO_KEEPALIVE;
+import static io.netty.channel.ChannelOption.TCP_NODELAY;
 import static java.util.concurrent.TimeUnit.SECONDS;
 
 import java.net.InetSocketAddress;
@@ -22,9 +22,9 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.codec.http.HttpRequestDecoder;
 import io.netty.handler.codec.http.HttpServerCodec;
 import io.netty.handler.timeout.IdleStateHandler;
-import net.content.IContentFactory;
-import net.dipatch.IDispatchManager;
 import net.io.INetServer;
+import net.io.dispatch.IContentFactory;
+import net.io.dispatch.IDispatchManager;
 import net.io.netty.server.INettyServerConfig;
 
 public class NettyHttpServer implements INetServer, Runnable {

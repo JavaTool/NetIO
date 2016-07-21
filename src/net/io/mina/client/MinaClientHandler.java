@@ -5,9 +5,9 @@ import org.apache.mina.common.ByteBuffer;
 import org.apache.mina.common.IoHandlerAdapter;
 import org.apache.mina.common.IoSession;
 
-import net.content.IContent;
-import net.content.IContentFactory;
-import net.content.IContentHandler;
+import net.io.dispatch.IContent;
+import net.io.dispatch.IContentFactory;
+import net.io.dispatch.IContentHandler;
 import net.io.mina.server.tcp.MinaTcpSender;
 
 public class MinaClientHandler extends IoHandlerAdapter {

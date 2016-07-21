@@ -17,12 +17,12 @@ import io.netty.handler.codec.http.HttpRequest;
 import io.netty.handler.codec.http.LastHttpContent;
 import io.netty.util.Attribute;
 import io.netty.util.AttributeKey;
-import net.content.Content;
-import net.content.IContent;
-import net.content.IContentFactory;
-import net.dipatch.IDispatchManager;
 import net.io.IHttpSession;
 import net.io.ISender;
+import net.io.dispatch.Content;
+import net.io.dispatch.IContent;
+import net.io.dispatch.IContentFactory;
+import net.io.dispatch.IDispatchManager;
 
 public class NettyHttpHandler extends SimpleChannelInboundHandler<Object> {
 	

@@ -7,9 +7,9 @@ import org.apache.mina.filter.codec.ProtocolCodecFilter;
 import org.apache.mina.transport.socket.nio.SocketAcceptor;
 import org.apache.mina.transport.socket.nio.SocketAcceptorConfig;
 
-import net.content.IContentFactory;
-import net.content.IContentHandler;
 import net.io.INetServer;
+import net.io.dispatch.IContentFactory;
+import net.io.dispatch.IContentHandler;
 import net.io.mina.server.NullDecoder;
 import net.io.mina.server.NullEncoder;
 

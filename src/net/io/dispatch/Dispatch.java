@@ -1,16 +1,13 @@
-package net.dipatch;
+package net.io.dispatch;
 
 import java.util.Queue;
-import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.TimeUnit;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.collect.Queues;
 import com.google.common.util.concurrent.AbstractScheduledService;
-
-import net.content.IContent;
-import net.content.IContentHandler;
 
 /**
  * 默认的消息分配器
@@ -28,7 +25,7 @@ public class Dispatch extends AbstractScheduledService implements IDispatch {
 	
 	public Dispatch(IContentHandler handler) {
 		this.handler = handler;
-		contents = new ConcurrentLinkedQueue<IContent>();
+		contents = Queues.newConcurrentLinkedQueue();
 	}
 	
 	/**
@@ -47,16 +44,10 @@ public class Dispatch extends AbstractScheduledService implements IDispatch {
 
 	@Override
 	public void fireDispatch(IContent content) {
-		long time = System.currentTimeMillis();
 		try {
 			handler.handle(content);
 		} catch (Exception e) {
 			log.error("", e);
-		}
-		time = System.currentTimeMillis() - time;
-		
-		if (time > getSLEEP_TIME()) {
-			log.warn("Too long time {} ms at {}.", time + "/" + getSLEEP_TIME(), content.getMessageId());
 		}
 	}
 

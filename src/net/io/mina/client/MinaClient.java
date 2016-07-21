@@ -11,9 +11,9 @@ import org.apache.mina.common.ThreadModel;
 import org.apache.mina.transport.socket.nio.SocketConnector;
 import org.apache.mina.transport.socket.nio.SocketConnectorConfig;
 
-import net.content.IContentFactory;
-import net.content.IContentHandler;
 import net.io.INetClient;
+import net.io.dispatch.IContentFactory;
+import net.io.dispatch.IContentHandler;
 
 public class MinaClient implements INetClient {
 

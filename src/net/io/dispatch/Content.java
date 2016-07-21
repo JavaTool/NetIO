@@ -1,19 +1,20 @@
-package net.content;
+package net.io.dispatch;
 
 import net.io.ISender;
 
 /**
- * A defaule implement of {@link IContent}
+ * 默认的消息内容
  * @author 	fuhuiyuan
  */
 public class Content implements IContent {
 	
+	/**会话id*/
 	private final String sessionId;
-	
+	/**消息id*/
 	private final int messageId;
-	
+	/**数据*/
 	private final byte[] datas;
-	
+	/**发送器*/
 	private final ISender sender;
 	
 	public Content(String sessionId, int messageId, byte[] datas, ISender sender) {

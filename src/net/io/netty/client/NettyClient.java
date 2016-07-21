@@ -13,9 +13,9 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
-import net.content.IContentFactory;
-import net.content.IContentHandler;
 import net.io.INetClient;
+import net.io.dispatch.IContentFactory;
+import net.io.dispatch.IContentHandler;
 
 public class NettyClient implements INetClient {
 	

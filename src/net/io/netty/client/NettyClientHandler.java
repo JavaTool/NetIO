@@ -7,10 +7,10 @@ import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandler.Sharable;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
-import net.content.IContent;
-import net.content.IContentFactory;
-import net.content.IContentHandler;
 import net.io.anthenticate.IDataAnthenticate;
+import net.io.dispatch.IContent;
+import net.io.dispatch.IContentFactory;
+import net.io.dispatch.IContentHandler;
 import net.io.netty.server.tcp.NettyTcpSender;
 
 @Sharable

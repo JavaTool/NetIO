@@ -1,4 +1,4 @@
-package net.dipatch;
+package net.io.dispatch;
 
 import java.util.List;
 import java.util.Map;
@@ -7,9 +7,6 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 
 import com.google.common.util.concurrent.Service;
-
-import net.content.IContent;
-import net.content.IContentHandler;
 
 /**
  * 默认的分配管理器

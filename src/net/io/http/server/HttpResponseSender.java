@@ -1,4 +1,4 @@
-package net.io.java;
+package net.io.http.server;
 
 import java.io.OutputStream;
 
@@ -19,30 +19,9 @@ public class HttpResponseSender implements ISender {
 	/**Http会话*/
 	private final HttpSession session;
 	
-	private final String ip;
-	
-	public HttpResponseSender(ServletResponse response, HttpSession session, String ip) {
+	public HttpResponseSender(ServletResponse response, HttpSession session) {
 		this.response = response;
 		this.session = session;
-		this.ip = ip;
-	}
-
-	@Override
-	public void send(byte[] datas, int messageId) throws Exception {
-		OutputStream os = response.getOutputStream();
-		try {
-			response.setContentType("text/plain; charset=UTF-8; " + "MessageId".toLowerCase() + "=" + messageId);
-			os.write(datas);
-		} catch (Exception e) {
-			if (CLOSE_EXCEPTION.equals(e.getMessage())) {
-				// unprocess close exception
-			} else {
-				throw e;
-			}
-		} finally {
-			os.flush();
-			os.close();
-		}
 	}
 
 	@Override
@@ -57,8 +36,27 @@ public class HttpResponseSender implements ISender {
 	}
 
 	@Override
+	public void send(byte[] datas, int messageId) throws Exception {
+		OutputStream os = response.getOutputStream();
+		try {
+//			response.setContentType(makeHead(messageId, useTime));
+			os.write(datas);
+		} catch (Exception e) {
+			if (CLOSE_EXCEPTION.equals(e.getMessage())) {
+				// unprocess close exception
+			} else {
+				throw e;
+			}
+		} finally {
+			os.flush();
+			os.close();
+		}
+	}
+
+	@Override
 	public String getIp() {
-		return ip;
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

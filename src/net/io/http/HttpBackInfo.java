@@ -1,4 +1,6 @@
-package net.io.java;
+package net.io.http;
+
+import net.io.ConnectBackInfo;
 
 /**
  * HTTP反馈信息
@@ -14,6 +16,10 @@ public class HttpBackInfo extends ConnectBackInfo {
 		this.status = status;
 	}
 
+	/**
+	 * 获取服务器状态
+	 * @return	服务器状态
+	 */
 	public int getStatus() {
 		return status;
 	}

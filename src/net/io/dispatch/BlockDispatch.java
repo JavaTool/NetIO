@@ -1,4 +1,4 @@
-package net.dipatch;
+package net.io.dispatch;
 
 import java.util.concurrent.BlockingQueue;
 
@@ -6,9 +6,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.collect.Queues;
-
-import net.content.IContent;
-import net.content.IContentHandler;
 
 public class BlockDispatch implements IDispatch, Runnable {
 	
@@ -30,7 +27,7 @@ public class BlockDispatch implements IDispatch, Runnable {
 
 	@Override
 	public void fireDispatch(IContent content) {
-		execute(content);
+		queue.add(content);
 	}
 
 	@Override
@@ -38,18 +35,10 @@ public class BlockDispatch implements IDispatch, Runnable {
 		while (true) {
 			try {
 				IContent content = queue.take();
-				execute(content);
+				handler.handle(content);
 			} catch (Exception e) {
 				log.error("", e);
 			}
-		}
-	}
-	
-	private void execute(IContent content) {
-		try {
-			handler.handle(content);
-		} catch (Exception e) {
-			log.error("", e);
 		}
 	}
 

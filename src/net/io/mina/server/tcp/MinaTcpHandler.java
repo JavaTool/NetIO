@@ -1,6 +1,6 @@
 package net.io.mina.server.tcp;
 
-import static net.content.IContentFactory.SESSION_ID;
+import static net.io.dispatch.IContentFactory.SESSION_ID;
 
 import java.util.UUID;
 
@@ -10,10 +10,10 @@ import org.apache.mina.common.IoSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import net.content.IContent;
-import net.content.IContentFactory;
-import net.content.IContentHandler;
 import net.io.ISender;
+import net.io.dispatch.IContent;
+import net.io.dispatch.IContentFactory;
+import net.io.dispatch.IContentHandler;
 
 public class MinaTcpHandler extends IoHandlerAdapter {
 	

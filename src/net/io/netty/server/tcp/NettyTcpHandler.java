@@ -12,12 +12,12 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.util.Attribute;
 import io.netty.util.AttributeKey;
-import net.content.Content;
-import net.content.IContent;
-import net.content.IContentFactory;
-import net.dipatch.IDispatchManager;
 import net.io.ISender;
 import net.io.anthenticate.IDataAnthenticate;
+import net.io.dispatch.Content;
+import net.io.dispatch.IContent;
+import net.io.dispatch.IContentFactory;
+import net.io.dispatch.IDispatchManager;
 import net.io.netty.server.http.NettyHttpSender;
 
 /**

@@ -1,4 +1,4 @@
-package net.io.java;
+package net.io.http;
 
 /**
  * HTTP状态
