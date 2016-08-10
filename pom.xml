@@ -108,4 +108,10 @@
 	</dependency>
   </dependencies>
   <url>https://github.com/JavaTool/NetIO.git</url>
+  <scm>
+  	<connection>scm:git:https://github.com/JavaTool/NetIO.git</connection>
+  	<url>https://github.com/JavaTool/NetIO</url>
+  	<developerConnection>https://github.com/JavaTool</developerConnection>
+  	<tag>1.0_alpha</tag>
+  </scm>
 </project>

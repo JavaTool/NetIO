@@ -10,10 +10,6 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * ����IP����
- * @author 	lighthu
- */
 public class TrustIp {
 	
 	private static final Logger log = LoggerFactory.getLogger(TrustIp.class);
@@ -56,13 +52,11 @@ public class TrustIp {
 
 	protected void check() {
 		long now = System.currentTimeMillis();
-		// ���1���Ӽ��һ��
 		if (now - lastCheckTime < 60000) {
 			return;
 		}
 		lastCheckTime = now;
 		if (file.lastModified() != lastModified) {
-			// ����ļ��޸�ʱ��仯����������
 			lastModified = file.lastModified();
 			try {
 				load();
@@ -88,7 +82,6 @@ public class TrustIp {
 	}
 
 	/**
-	 * �ж�һ����ַ�Ƿ������α���
 	 * @param 	address
 	 * 			
 	 * @return	
@@ -108,7 +101,6 @@ public class TrustIp {
 	}
 
 	/**
-	 * ǿ�����һ�����ε�ַ��
 	 * @param 	begin
 	 * 			
 	 * @param 	end
