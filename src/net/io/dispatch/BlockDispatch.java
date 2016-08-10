@@ -7,12 +7,18 @@ import org.slf4j.LoggerFactory;
 
 import com.google.common.collect.Queues;
 
+/**
+ * A dispatch with blocking queue.<br>
+ * If do not have content, blocking the current thread.<br>
+ * When have any content, process and remove all.
+ * @author	hyfu
+ */
 public class BlockDispatch implements IDispatch, Runnable {
 	
 	protected static final Logger log = LoggerFactory.getLogger(BlockDispatch.class);
-	
+	/** Blocking queue of contents. */
 	protected BlockingQueue<IContent> queue;
-	/**消息接收器*/
+	/** Content handler. */
 	protected final IContentHandler handler;
 	
 	public BlockDispatch(IContentHandler handler) {

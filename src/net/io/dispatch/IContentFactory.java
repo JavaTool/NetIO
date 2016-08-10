@@ -38,7 +38,10 @@ public interface IContentFactory {
 	 * @return	{@link IContent}
 	 */
 	IContent createContent(byte[] data, ISender sender);
-	
+	/**
+	 * Get the data anthenticator.
+	 * @return	The data anthenticator.
+	 */
 	IDataAnthenticate<byte[], DataOutputStream> getDataAnthenticate();
 
 }

@@ -3,29 +3,29 @@ package net.io.dispatch;
 import net.io.ISender;
 
 /**
- * 消息内容
- * @author 	fuhuiyuan
+ * The content of a message.
+ * @author 	hyfu
  */
 public interface IContent {
 	
 	/**
-	 * 获取会话id
-	 * @return	会话id
+	 * Get the session id.
+	 * @return	session id
 	 */
 	String getSessionId();
 	/**
-	 * 获取消息id
-	 * @return	消息id
+	 * Get the message id.
+	 * @return	message id
 	 */
 	int getMessageId();
 	/**
-	 * 获取消息数据
-	 * @return	消息数据
+	 * Get the message datas.
+	 * @return	message datas
 	 */
 	byte[] getDatas();
 	/**
-	 * 获取发送器
-	 * @return	发送器
+	 * Get the sender which can send response.
+	 * @return	The sender which can send response.
 	 */
 	ISender getSender();
 

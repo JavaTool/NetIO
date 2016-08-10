@@ -1,21 +1,21 @@
 package net.io.dispatch;
 
 /**
- * 消息分配器
- * @author 	fuhuiyuan
+ * Dispatcher of content.
+ * @author 	hyfu
  */
 public interface IDispatch {
 	
 	/**
-	 * 添加消息
+	 * Add a content wait to process.
 	 * @param 	content
 	 * 			消息内容
 	 */
 	void addDispatch(IContent content);
 	/**
-	 * 立即分配消息
+	 * Add a content and process at once.
 	 * @param 	content
-	 * 			消息内容
+	 * 			
 	 */
 	void fireDispatch(IContent content);
 

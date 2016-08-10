@@ -10,17 +10,18 @@ import com.google.common.collect.Queues;
 import com.google.common.util.concurrent.AbstractScheduledService;
 
 /**
- * 默认的消息分配器
- * @author 	fuhuiyuan
+ * The default implement of {@link IDispatch}.<br>
+ * Once in a while process all contents.
+ * @author 	hyfu
  */
 public class Dispatch extends AbstractScheduledService implements IDispatch {
 	
 	protected static final Logger log = LoggerFactory.getLogger(Dispatch.class);
-	/**休眠时间*/
+	/** Work interval. */
 	private static int SLEEP_TIME;
-	/**消息队列*/
+	
 	protected final Queue<IContent> contents;
-	/**消息接收器*/
+	
 	protected final IContentHandler handler;
 	
 	public Dispatch(IContentHandler handler) {
@@ -29,7 +30,7 @@ public class Dispatch extends AbstractScheduledService implements IDispatch {
 	}
 	
 	/**
-	 * 分配工作
+	 * Process all contents.
 	 */
 	protected void work() {
 		while (contents.size() > 0) {
@@ -52,17 +53,17 @@ public class Dispatch extends AbstractScheduledService implements IDispatch {
 	}
 
 	/**
-	 * 获取休眠时间
-	 * @return	休眠时间
+	 * Get work interval.
+	 * @return	Work interval.
 	 */
 	public static int getSLEEP_TIME() {
 		return SLEEP_TIME;
 	}
 
 	/**
-	 * 设置休眠时间
+	 * Set work interval.
 	 * @param 	sLEEP_TIME
-	 * 			休眠时间
+	 * 			Work interval.
 	 */
 	public static void setSLEEP_TIME(int sLEEP_TIME) {
 		SLEEP_TIME = sLEEP_TIME;

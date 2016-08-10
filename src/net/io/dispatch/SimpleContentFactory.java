@@ -11,6 +11,10 @@ import org.slf4j.LoggerFactory;
 import net.io.ISender;
 import net.io.anthenticate.IDataAnthenticate;
 
+/**
+ * The simple implement of {@link IContentFactory}.
+ * @author	hyfu
+ */
 public class SimpleContentFactory implements IContentFactory {
 	
 	protected static final Logger log = LoggerFactory.getLogger(SimpleContentFactory.class);
@@ -37,6 +41,14 @@ public class SimpleContentFactory implements IContentFactory {
 		}
 	}
 	
+	/**
+	 * Create content by a stream.
+	 * @param 	dis
+	 * 			The input stream.
+	 * @param 	sender
+	 * @return	A content.
+	 * @throws 	IOException
+	 */
 	protected IContent createContent(DataInputStream dis, ISender sender) throws IOException {
 		int messageId = dis.readInt();
 		int messageLength = dis.readInt();

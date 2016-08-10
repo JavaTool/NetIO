@@ -68,15 +68,12 @@ public class NettyTcpServer implements INetServer {
 		EventLoopGroup workerGroup = new NioEventLoopGroup(childThreadNum);
 		try {
 			serverBootstrap = new ServerBootstrap();
-			serverBootstrap.group(bossGroup, workerGroup).channel(NioServerSocketChannel.class).option(SO_BACKLOG, soBacklog)
-			.handler(new LoggingHandler(INFO));
-			// 注册TCP处理流水线
+			serverBootstrap.group(bossGroup, workerGroup).channel(NioServerSocketChannel.class).option(SO_BACKLOG, soBacklog).handler(new LoggingHandler(INFO));
 			serverBootstrap.childHandler(new ChannelInitializer<SocketChannel>() {
 
 				@Override
 				protected void initChannel(SocketChannel ch) throws Exception {
 					ChannelPipeline pipeline = ch.pipeline();
-					// 读信道空闲,写信道空闲,读，写信道空闲
 					pipeline.addLast("idleStateHandler", new IdleStateHandler(readerIdleTime, writerIdleTime, allIdleTime, SECONDS));
 					// 粘包处理
 					pipeline.addLast("Decoder", new LengthFieldBasedFrameDecoder(Integer.MAX_VALUE, 0, 4, 0, 4));

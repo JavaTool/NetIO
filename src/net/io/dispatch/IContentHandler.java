@@ -1,19 +1,25 @@
 package net.io.dispatch;
 
 /**
- * 消息接收器
- * @author 	fuhuiyuan
+ * The content handler.
+ * @author	hyfu
  */
 public interface IContentHandler {
 	
 	/**
-	 * 接收消息
+	 * Hanle content.
 	 * @param 	content
-	 * 			消息
+	 * 			
 	 * @throws 	Exception
 	 */
 	void handle(IContent content) throws Exception;
-	
+	/**
+	 * Disconnect a connection.
+	 * @param 	sessionId
+	 * 			The connection's sessionId
+	 * @param 	address
+	 * 			The connection's address.
+	 */
 	void disconnect(String sessionId, String address);
 
 }

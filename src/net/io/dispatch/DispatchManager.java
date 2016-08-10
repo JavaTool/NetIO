@@ -9,16 +9,15 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
 import com.google.common.util.concurrent.Service;
 
 /**
- * 默认的分配管理器
- * @author 	fuhuiyuan
+ * The default implement of {@link IDispatchManager}.<br>
+ * @author 	hyfu
  */
 public class DispatchManager implements IDispatchManager {
 	
-	/**分配器集合*/
 	protected final Map<String, IDispatch> dispatchs;
-	/**消息接收器*/
+	
 	protected final IContentHandler handler;
-	/**任务执行服务*/
+	
 	protected final ScheduledExecutorService executorService;
 	
 	protected final List<Service> serviceList;
@@ -44,10 +43,10 @@ public class DispatchManager implements IDispatchManager {
 	}
 	
 	/**
-	 * 获取一个分配器
+	 * Get a dispatch which can process the content.
 	 * @param 	content
-	 * 			消息内容
-	 * @return	分配器
+	 * 			
+	 * @return	A dispatch which can process the content.
 	 */
 	protected synchronized IDispatch fetch(IContent content) {
 		String key = content.getSessionId();

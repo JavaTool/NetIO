@@ -1,15 +1,15 @@
 package net.io.dispatch;
 
 /**
- * 分配器管理器
+ * A group of dispatcher.
  * @author 	fuhuiyuan
  */
 public interface IDispatchManager extends IDispatch {
 	
 	/**
-	 * 断开
+	 * Disconnect.
 	 * @param 	content
-	 * 			断开消息
+	 * 			
 	 */
 	void disconnect(IContent content);
 
