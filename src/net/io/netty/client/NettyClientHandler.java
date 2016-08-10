@@ -11,7 +11,7 @@ import net.io.anthenticate.IDataAnthenticate;
 import net.io.dispatch.IContent;
 import net.io.dispatch.IContentFactory;
 import net.io.dispatch.IContentHandler;
-import net.io.netty.server.tcp.NettyTcpSender;
+import net.io.netty.NettyTcpSender;
 
 @Sharable
 public class NettyClientHandler extends ChannelInboundHandlerAdapter {

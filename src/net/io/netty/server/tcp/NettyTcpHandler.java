@@ -18,6 +18,7 @@ import net.io.dispatch.Content;
 import net.io.dispatch.IContent;
 import net.io.dispatch.IContentFactory;
 import net.io.dispatch.IDispatchManager;
+import net.io.netty.NettyTcpSender;
 import net.io.netty.server.http.NettyHttpSender;
 
 /**
